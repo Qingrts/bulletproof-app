@@ -1,55 +1,90 @@
+# CLAUDE.md
 
-You are an expert in TypeScript, Angular, and scalable web application development. You write functional, maintainable, performant, and accessible code following Angular and TypeScript best practices.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## TypeScript Best Practices
+## Development Commands
 
-- Use strict type checking
-- Prefer type inference when the type is obvious
-- Avoid the `any` type; use `unknown` when type is uncertain
+- `npm start` or `ng serve` - Start development server on http://localhost:4200
+- `npm run build` or `ng build` - Build production application
+- `npm run watch` - Build in watch mode for development
+- `npm run test` or `ng test` - Run unit tests with Vitest
+- `npm run storybook` - Start Storybook dev server on http://localhost:6006
+- `npm run build-storybook` - Build static Storybook output
 
-## Angular Best Practices
+## Architecture Overview
 
-- Always use standalone components over NgModules
-- Must NOT set `standalone: true` inside Angular decorators. It's the default in Angular v20+.
-- Use signals for state management
-- Implement lazy loading for feature routes
-- Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
-- Use `NgOptimizedImage` for all static images.
-  - `NgOptimizedImage` does not work for inline base64 images.
+### Feature-Based Structure
+All feature code lives under `src/app/features/`. Each feature is self-contained with its own:
+- Components
+- Models (interfaces, types)
+- Services (HTTP clients)
+- Store (signal-based state management)
+- Supporting files
 
-## Accessibility Requirements
+Example: `features/comments/`
 
-- It MUST pass all AXE checks.
-- It MUST follow all WCAG AA minimums, including focus management, color contrast, and ARIA attributes.
+### State Management Pattern
+Use signals for local state, computed for derived values, and dedicated store classes for application state:
 
-### Components
+- **Private signals** for state (wrapped with `asReadonly()` for public API)
+- **Computed** for derived values (always pure)
+- **Actions** mutate state using `update()` or `set()` (never direct mutation)
 
-- Keep components small and focused on a single responsibility
-- Use `input()` and `output()` functions instead of decorators
-- Use `computed()` for derived state
-- Set `changeDetection: ChangeDetectionStrategy.OnPush` in `@Component` decorator
+Example in `features/comments/store/comment.store.ts`:
+```typescript
+private commentsSignal = signal<Comment[]>([]);
+readonly sortedComments = computed(() => [...this.commentsSignal()].sort(...));
+```
+
+### HTTP Service Pattern
+Services extend `provideHttpClient()` with retry/timeout logic via RxJS operators:
+
+```typescript
+getCommentsByPost(postId: string): Observable<Comment[]> {
+  return this.http.get<Comment[]>(`${this.apiUrl}?postId=${postId}`)
+    .pipe(timeout(REQUEST_TIMEOUT), retry(MAX_RETRIES));
+}
+```
+
+### Route Configuration
+Routes use lazy loading with dynamic imports:
+```typescript
+{ path: 'post/:id', loadComponent: () =>
+  import('./features/comments/comments-feature.component')
+    .then(m => m.CommentsFeatureComponent)
+}
+```
+
+### Path Aliases
+TypeScript paths configured in `tsconfig.app.json`:
+- `@components/*` → `src/app/components/*`
+- `@pages/*` → `src/app/pages/*`
+- `@shared/*` → `src/app/shared/*`
+
+## Key Patterns
+
+### Component Design
+- Use `input()` function instead of `@Input()` decorator
+- Use `output()` function instead of `@Output()` decorator
+- Set `changeDetection: ChangeDetectionStrategy.OnPush`
 - Prefer inline templates for small components
-- Prefer Reactive forms instead of Template-driven ones
-- Do NOT use `ngClass`, use `class` bindings instead
-- Do NOT use `ngStyle`, use `style` bindings instead
-- When using external templates/styles, use paths relative to the component TS file.
+- Use `inject()` for dependency injection (no constructor injection)
+- Use native control flow (`@if`, `@for`) over directives (`*ngIf`, `*ngFor`)
 
-## State Management
+### Styling
+- Use LESS as the styling language
+- Use inline styles in component files for simplicity
+- Use `class` bindings instead of `ngClass`
+- Use `style` bindings instead of `ngStyle`
 
-- Use signals for local component state
-- Use `computed()` for derived state
-- Keep state transformations pure and predictable
-- Do NOT use `mutate` on signals, use `update` or `set` instead
+### Testing
+- Vitest with jsdom environment for unit tests
+- Test providers in `src/test-providers.ts`
+- Vitest config in `vitest.config.ts` and `vitest-base.config.ts`
+- Coverage configuration in `vitest.config.ts` excludes test files
 
-## Templates
-
-- Keep templates simple and avoid complex logic
-- Use native control flow (`@if`, `@for`, `@switch`) instead of `*ngIf`, `*ngFor`, `*ngSwitch`
-- Use the async pipe to handle observables
-- Do not assume globals like (`new Date()`) are available.
-
-## Services
-
-- Design services around a single responsibility
-- Use the `providedIn: 'root'` option for singleton services
-- Use the `inject()` function instead of constructor injection
+### Accessibility
+- Always include `role` attributes for interactive elements
+- Use `aria-label` for screen readers
+- Maintain WCAG AA color contrast
+- Ensure proper focus management

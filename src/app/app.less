@@ -1,0 +1,27 @@
+.progress-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px; /* 很细的条显得更高级 */
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 10001;
+  pointer-events: none;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+  transition: width 0.4s cubic-bezier(0.08, 0.82, 0.17, 1); /* 关键：使用平滑的贝塞尔曲线 */
+  position: relative;
+}
+
+/* 进度条前端的光晕效果，增加“流动感” */
+.glow {
+  position: absolute;
+  right: 0;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px #00f2fe, 0 0 5px #00f2fe;
+  opacity: 0.6;
+}
