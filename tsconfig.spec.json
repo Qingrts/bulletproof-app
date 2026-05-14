@@ -6,7 +6,13 @@
     "outDir": "./out-tsc/spec",
     "types": [
       "vitest/globals"
-    ]
+    ],
+    "paths": {
+      "@components/*": ["./src/app/components/*"],
+      "@pages/*": ["./src/app/pages/*"],
+      "@shared/*": ["./src/app/shared/*"],
+      "@spartan-ng/helm/*": ["./src/app/shared/libs/spartan/*"]
+    }
   },
   "files": [
     "src/test-providers.ts"

@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export abstract class StorageService {
-  abstract getItem<T>(key: string): T | null;
-  abstract setItem<T>(key: string, value: T, ttl?: number): void;
-  abstract removeItem(key: string): void;
-  abstract clear(): void;
+  abstract get<T>(key: string): Promise<T | null | undefined>;
+  abstract set<T>(key: string, value: T): Promise<void>;
+  abstract delete(key: string): Promise<void>;
+  abstract clear(): Promise<void>;
 }

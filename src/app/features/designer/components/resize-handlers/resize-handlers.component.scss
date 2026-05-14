@@ -1,0 +1,26 @@
+.resize-wrapper {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border: 1px solid #00e5ff; // 图片中的青色边框
+  pointer-events: none;
+
+  .handle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border: 1px solid #00e5ff;
+    pointer-events: auto;
+    z-index: 10;
+
+    // 定位各个点
+    &-n  { top: -4px; left: 50%; cursor: n-resize; transform: translateX(-50%); }
+    &-s  { bottom: -4px; left: 50%; cursor: s-resize; transform: translateX(-50%); }
+    &-w  { left: -4px; top: 50%; cursor: w-resize; transform: translateY(-50%); }
+    &-e  { right: -4px; top: 50%; cursor: e-resize; transform: translateY(-50%); }
+    &-nw { top: -4px; left: -4px; cursor: nw-resize; }
+    &-ne { top: -4px; right: -4px; cursor: ne-resize; }
+    &-sw { bottom: -4px; left: -4px; cursor: sw-resize; }
+    &-se { bottom: -4px; right: -4px; cursor: se-resize; }
+  }
+}

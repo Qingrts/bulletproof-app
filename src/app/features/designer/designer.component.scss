@@ -1,0 +1,43 @@
+.designer-container {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #121212; // 整体深色背景
+  color: #e0e0e0;
+
+  .designer-header {
+    height: 56px;
+    border-bottom: 1px solid #333;
+    z-index: 100;
+  }
+
+  .designer-main {
+    flex: 1;
+    display: flex;
+    overflow: hidden; // 防止主区域出现双滚动条
+
+    .designer-sidebar {
+      width: 300px; // 包含一级分类栏和二级列表的总宽度
+      border-right: 1px solid #333;
+      background-color: #1a1a1a;
+    }
+
+    .designer-content {
+      flex: 1;
+      min-width: 0;
+      position: relative;
+      background-color: #1e1e1e;
+      overflow: hidden;
+      // 这里的背景可以做成略深于画布的颜色，突出画布感
+    }
+
+    .designer-settings {
+      width: 320px;
+      border-left: 1px solid #333;
+      background-color: #1a1a1a;
+      overflow-y: auto; // 属性面板内容多时允许垂直滚动
+    }
+  }
+}

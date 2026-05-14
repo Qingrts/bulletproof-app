@@ -1,0 +1,250 @@
+// 定义颜色变量
+$panel-bg: #1a1a1a;
+$group-bg: #222222;
+$input-bg: #2a2a2a;
+$border-color: #333333;
+$accent-color: #00e5ff; // 青色高亮
+$text-main: #e0e0e0;
+$text-muted: #888888;
+$error-color: #ff4d4f;
+
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background-color: $panel-bg;
+  color: $text-main;
+  font-size: 13px;
+  border-left: 1px solid $border-color;
+}
+
+.settings-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  // 1. 顶部 Tab 切换
+  .settings-tabs {
+    display: flex;
+    border-bottom: 1px solid $border-color;
+    background-color: darken($panel-bg, 2%);
+
+    .tab-item {
+      flex: 1;
+      padding: 12px 0;
+      text-align: center;
+      cursor: pointer;
+      color: $text-muted;
+      transition: all 0.2s;
+      border-bottom: 2px solid transparent;
+
+      &:hover {
+        color: $text-main;
+      }
+
+      &.active {
+        color: $accent-color;
+        border-bottom-color: $accent-color;
+        background: rgba($accent-color, 0.05);
+      }
+
+      i {
+        margin-right: 4px;
+        font-size: 14px;
+      }
+    }
+  }
+
+  .settings-scroll-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 40px;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: #444;
+    }
+  }
+
+  // 2. 组件头部信息
+  .widget-header {
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to right, rgba($accent-color, 0.1), transparent);
+
+    .widget-type-tag {
+      background: $accent-color;
+      color: #000;
+      padding: 2px 6px;
+      border-radius: 2px;
+      font-weight: bold;
+      font-size: 10px;
+    }
+
+    .widget-id {
+      color: $text-muted;
+      font-family: monospace;
+    }
+  }
+
+  // 3. 折叠组样式
+  .property-group {
+    border-bottom: 1px solid $border-color;
+
+    summary {
+      list-style: none;
+      padding: 10px 16px;
+      background: $group-bg;
+      cursor: pointer;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      &:hover {
+        background: lighten($group-bg, 3%); 
+      }
+
+      .chevron-icon {
+        transition: transform 0.2s;
+        border: solid $text-muted;
+        border-width: 0 2px 2px 0;
+        display: inline-block;
+        padding: 3px;
+        transform: rotate(45deg);
+      }
+    }
+
+    &[open] summary .chevron-icon {
+      transform: rotate(-135deg);
+    }
+
+    .group-content {
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+  }
+
+  // 4. 表单行布局
+  .field-row {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    align-items: center;
+    gap: 12px;
+
+    .field-label {
+      color: $text-muted;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .field-control {
+      input[type="text"],
+      input[type="number"],
+      select {
+        width: 100%;
+        height: 28px;
+        background: $input-bg;
+        border: 1px solid $border-color;
+        border-radius: 3px;
+        color: $text-main;
+        padding: 0 8px;
+        outline: none;
+
+        &:focus {
+          border-color: $accent-color;
+        }
+      }
+    }
+  }
+
+  // 5. 特定控件样式
+  .number-input-wrapper {
+    position: relative;
+    .unit-tag {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #555;
+      font-size: 11px;
+      pointer-events: none;
+    }
+    input { padding-right: 25px !important; }
+  }
+
+  .color-picker-group {
+    display: flex;
+    gap: 8px;
+
+    input[type="color"] {
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      border: 1px solid $border-color;
+      background: none;
+      cursor: pointer;
+      &::-webkit-color-swatch { border: none; border-radius: 2px; }
+    }
+
+    .hex-input {
+      flex: 1;
+      font-family: monospace;
+      text-transform: uppercase;
+    }
+  }
+
+  // 6. 底部按钮
+  .settings-actions {
+    padding: 20px 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+
+    button {
+      padding: 8px;
+      border: 1px solid $border-color;
+      background: $input-bg;
+      color: $text-main;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        background: #333;
+      }
+
+      &.btn-delete:hover {
+        border-color: $error-color;
+        color: $error-color;
+      }
+    }
+  }
+
+  // 7. 空状态
+  .empty-state {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: $text-muted;
+
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.3;
+    }
+  }
+}

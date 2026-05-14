@@ -1,0 +1,9 @@
+<!-- 控制点容器 -->
+<div class="resize-wrapper">
+  @for (dir of handles; track dir) {
+    <div class="handle" 
+         [class]="'handle-' + dir"
+         (mousedown)="onResizeStart($event, dir)">
+    </div>
+  }
+</div>

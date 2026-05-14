@@ -2,4 +2,18 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { App } from './app/app';
 
-bootstrapApplication(App, appConfig).catch((err) => console.error(err));
+async function prepareApp() {
+  // 仅在非生产环境启动 MSW
+  if (true) {
+    const { worker } = await import('./mocks/browser');
+    return worker.start({
+      onUnhandledRequest: 'bypass', // 未定义的接口直接放行
+    });
+  }
+  return Promise.resolve();
+}
+
+prepareApp().then(() => {
+  bootstrapApplication(App, appConfig)
+    .catch((err) => console.error(err));
+});

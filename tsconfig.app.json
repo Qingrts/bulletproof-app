@@ -9,7 +9,8 @@
       "@components/*": ["./src/app/components/*"],
       "@pages/*": ["./src/app/pages/*"],
       "@shared/*": ["./src/app/shared/*"],
-      "@spartan-ng/helm/*": ["./src/app/shared/libs/spartan/*"]
+      "@spartan-ng/helm/*": ["./src/app/shared/libs/spartan/*"],
+      "@core/*": ["./src/app/core/*"]
     }
   },
   "include": [

@@ -1,0 +1,60 @@
+<!-- product-list.component.html -->
+<div class="page-container p-6">
+  <header class="flex justify-between items-center mb-6">
+    <h2 class="text-xl font-bold">商品管理</h2>
+    
+    <nz-space>
+      <nz-input-group [nzSuffix]="suffixIconSearch" style="width: 250px">
+        <input 
+          type="text" 
+          nz-input 
+          placeholder="搜索商品名称..." 
+          [ngModel]="searchName()" 
+          (ngModelChange)="searchName.set($event)" 
+        />
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <span nz-icon nzType="search"></span>
+      </ng-template>
+
+      <button nz-button nzType="default" (click)="onReload()">
+        <span nz-icon nzType="reload"></span>刷新
+      </button>
+      <button nz-button nzType="primary" (click)="goToEdit()">
+        <span nz-icon nzType="plus"></span>新增商品
+      </button>
+    </nz-space>
+  </header>
+
+  <!-- 核心表格组件 -->
+  <app-shared-data-table
+    [data]="facade.products()"
+    [columns]="columns"
+    [loading]="facade.isLoading()"
+    [total]="facade.total()"
+    [pageIndex]="facade.pageIndex()"
+    (pageIndexChange)="onPageChange($event)"
+  >
+    <!-- 自定义价格列模板 -->
+    <ng-template #cellTemplate let-item let-column="column">
+      @if (column.key === 'price') {
+        <div class="flex flex-col">
+          <span class="text-orange-600 font-bold">¥{{ item.basePrice }} 起</span>
+          <span class="text-xs text-gray-400">库存: {{ item.totalStock }}</span>
+        </div>
+      }
+    </ng-template>
+
+    <!-- 自定义操作列模板 -->
+    <ng-template #actionTemplate let-item>
+      <nz-space>
+        <a (click)="goToEdit(item.id)">编辑</a>
+        <span class="text-gray-300">|</span>
+        <a 
+          class="text-red-500" 
+          (click)="confirmDelete(item.id, item.name)"
+        >删除</a>
+      </nz-space>
+    </ng-template>
+  </app-shared-data-table>
+</div>

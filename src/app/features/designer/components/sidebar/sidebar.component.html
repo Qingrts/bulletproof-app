@@ -1,0 +1,68 @@
+<div class="sidebar-container">
+  <!-- 1. 一级分类侧边条 -->
+  <aside class="category-rail">
+    @for (cat of categories; track cat.id) {
+    <div class="cat-item" [class.active]="activeCategory() === cat.id" (click)="setCategory(cat.id)">
+      <i [class]="cat.icon"></i>
+      <span>{{ cat.label }}</span>
+    </div>
+    }
+  </aside>
+
+  <!-- 2. 二级组件列表面板 -->
+  <main class="asset-panel">
+    <div class="header">
+      <span>组件清单</span>
+      <div class="view-switch flex">
+        <!-- 图片中的网格/列表切换按钮 -->
+        <div class="switch-item text-sm">
+          <i class="w-[1em] h-[1em] inline-block"><svg xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512">
+              <path d="M368 96H144a16 16 0 0 1 0-32h224a16 16 0 0 1 0 32z" fill="currentColor"></path>
+              <path d="M400 144H112a16 16 0 0 1 0-32h288a16 16 0 0 1 0 32z" fill="currentColor"></path>
+              <path
+                d="M419.13 448H92.87A44.92 44.92 0 0 1 48 403.13V204.87A44.92 44.92 0 0 1 92.87 160h326.26A44.92 44.92 0 0 1 464 204.87v198.26A44.92 44.92 0 0 1 419.13 448z"
+                fill="currentColor"></path>
+            </svg></i>
+        </div>
+
+        <div class="switch-item text-sm">
+          <i class="w-[1em] h-[1em] inline-block">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512">
+              <path d="M204 240H68a36 36 0 0 1-36-36V68a36 36 0 0 1 36-36h136a36 36 0 0 1 36 36v136a36 36 0 0 1-36 36z"
+                fill="currentColor"></path>
+              <path d="M444 240H308a36 36 0 0 1-36-36V68a36 36 0 0 1 36-36h136a36 36 0 0 1 36 36v136a36 36 0 0 1-36 36z"
+                fill="currentColor"></path>
+              <path d="M204 480H68a36 36 0 0 1-36-36V308a36 36 0 0 1 36-36h136a36 36 0 0 1 36 36v136a36 36 0 0 1-36 36z"
+                fill="currentColor"></path>
+              <path
+                d="M444 480H308a36 36 0 0 1-36-36V308a36 36 0 0 1 36-36h136a36 36 0 0 1 36 36v136a36 36 0 0 1-36 36z"
+                fill="currentColor"></path>
+            </svg>
+          </i>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="search-box">
+      <input type="text" placeholder="搜索组件">
+    </div>
+
+    <div class="asset-grid">
+      @for (asset of filteredAssets(); track asset.type) {
+      <div class="asset-card" cdkDrag [cdkDragData]="asset">
+        <div class="thumb">
+          <img [src]="asset.icon" [alt]="asset.name">
+        </div>
+        <div class="footer">{{ asset.name }}</div>
+
+        <!-- 拖拽时的预览样式 -->
+        <div *cdkDragPreview class="dragging-preview">
+          <img [src]="asset.icon">
+        </div>
+      </div>
+      }
+    </div>
+  </main>
+</div>

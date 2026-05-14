@@ -1,0 +1,123 @@
+/* canvas.component.scss */
+
+.canvas-wrapper-container {
+  display: grid;
+  grid-template-columns: 20px 1fr; // 垂直标尺宽 20px
+  grid-template-rows: 20px 1fr;    // 水平标尺高 20px
+  width: 100%;
+  height: 100%;
+
+  // 1. 左上角小方块：必须最高，盖住横纵标尺交汇处
+  .ruler-corner {
+    grid-column: 1;
+    grid-row: 1;
+    background: #1a1a1a;
+    z-index: 30; // 最高层
+    // border-right: 1px solid #333;
+    // border-bottom: 1px solid #333;
+  }
+
+  .ruler-h-container { 
+    grid-column: 2; 
+    overflow: hidden; // 隐藏标尺自身的滚动条
+  }
+
+  .ruler-v-container { 
+    grid-row: 2; 
+    overflow: hidden; 
+  }
+
+  .ruler-h-container, .ruler-v-container {
+    overflow: hidden; // 隐藏滚动条
+    position: relative;
+    background: #1a1a1a;
+    
+    // 这里的内部 canvas 宽度必须足够大，或者动态跟随画布宽度
+    canvas {
+      pointer-events: none; // 标尺本身不阻挡鼠标事件
+    }
+  }
+  .canvas-viewport {
+    grid-column: 2;
+    grid-row: 2;
+    z-index: 10; // 基础层
+    overflow: auto;
+    position: relative; // 建立局部坐标系
+    background-color: #1e1e1e;
+  }
+
+  .canvas-footer {
+
+    position: absolute; // 相对于 .canvas-wrapper-container 定位
+    bottom: 24px;
+    right: 24px;
+    z-index: 2000; // 确保层级最高
+    
+    // 样式保持之前的半透明深色设计
+    background: rgba(26, 26, 26, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    pointer-events: auto;
+
+    span {
+      color: #fff;
+      font-size: 12px;
+      min-width: 40px;
+    }
+
+    input[type="range"] {
+      cursor: pointer;
+      // ... 自定义 range 样式
+    }
+  }
+}
+.canvas-viewport {
+  
+
+  .canvas-board {
+    position: relative;
+    transform-origin: 0 0; // 改为左上角缩放，滚动条计算最准确
+    background-color: #000;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    transition: transform 0.1s ease-out;
+
+    // 这个留白能确保画布缩小到 10% 时，用户依然能轻松看到画布边缘并进行操作
+    margin: 150px; 
+    // 因为画布内部的间距通常是由里面的组件坐标（x, y）决定的
+    padding: 0;
+
+    // background-color: #ffffff; // 模拟纸张或大屏背景
+    box-shadow: 0 0 20px rgba(0,0,0,0.5); // 给画布一个阴影，增加层次感
+
+    .grid-background {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      // 绘制网格线
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 20px 20px; // 网格大小
+    }
+  }
+
+  .widget-wrapper {
+    position: absolute;
+    cursor: move;
+    outline: 1px solid transparent;
+
+    &.active {
+      outline: 1px solid #00e5ff; // 选中时的青色边框
+      background: rgba(0, 229, 255, 0.05);
+    }
+  }
+
+  
+
+  
+}

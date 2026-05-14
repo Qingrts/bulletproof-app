@@ -11,7 +11,17 @@ export class UserFacade {
   
   // 状态管理：使用 Signals
   private state = signal<{ list: User[]; loading: boolean }>({
-    list: [],
+    list: [
+      // {
+      //   id: '1', username: 'Admin', email: 'a@test.com', role: 'admin',
+      //   status: "active",
+      //   createdAt: new Date(),
+      // },
+      // {
+      //   id: '2', username: 'Editor', email: 'e@test.com', role: 'user', createdAt: new Date(),
+      //   status: "active"
+      // }
+    ],
     loading: false
   });
 
@@ -42,10 +52,18 @@ export class UserFacade {
   reload() { this.reloadSubject.next(); }
 
   deleteUser(id: string) {
-    // 使用 exhaustMap 防止重复点击删除
+    // 1. 开始前将 loading 设为 true
+    this.patchState({ loading: true }); 
+
     of(id).pipe(
       exhaustMap(uid => this.userApi.delete(uid)),
-      tap(() => this.notify.success('删除成功'))
+      tap(() => this.notify.success('删除成功')),
+      catchError(err => {
+        this.notify.error('删除失败'); // 这里的字符串要和测试用例对上
+        return of(null);
+      }),
+      // 2. 无论成功还是失败，都要把 loading 设回 false
+      finalize(() => this.patchState({ loading: false })) 
     ).subscribe(() => this.reload());
   }
 

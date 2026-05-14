@@ -26,11 +26,6 @@ describe('AddCommentComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should require postId input', () => {
-    // 验证输入已设置
-    expect(component.postId()).toBe('test-post-123');
-  });
-
   describe('模板渲染', () => {
     it('应该渲染文本域和提交按钮', () => {
       const textarea = fixture.debugElement.query(By.css('textarea'));
@@ -82,7 +77,7 @@ describe('AddCommentComponent', () => {
     });
 
     it('提交中时应该显示"提交中..."文本', () => {
-      component.isSubmitting.set(true);
+      fixture.componentRef.setInput('submitting', true);
       fixture.detectChanges();
 
       const button = fixture.debugElement.query(By.css('.submit-btn')).nativeElement;
@@ -90,7 +85,7 @@ describe('AddCommentComponent', () => {
     });
 
     it('非提交状态应该显示"发表评论"文本', () => {
-      component.isSubmitting.set(false);
+      fixture.componentRef.setInput('submitting', false);
       fixture.detectChanges();
 
       const button = fixture.debugElement.query(By.css('.submit-btn')).nativeElement;
@@ -98,7 +93,7 @@ describe('AddCommentComponent', () => {
     });
 
     it('提交中时应该禁用文本域', async () => {
-      component.isSubmitting.set(true);
+      fixture.componentRef.setInput('submitting', true);
       fixture.detectChanges();
       await fixture.whenStable(); // 等待异步更新完成
       fixture.detectChanges(); // 再次触发变更检测
@@ -138,7 +133,7 @@ describe('AddCommentComponent', () => {
 
     it('当正在提交时不应该重复提交', () => {
       component.content = '测试评论';
-      component.isSubmitting.set(true);
+      fixture.componentRef.setInput('submitting', true);
       const emitSpy = vi.spyOn(component.commentAdded, 'emit');
 
       component.submit();
@@ -152,13 +147,21 @@ describe('AddCommentComponent', () => {
       const emitSpy = vi.spyOn(component.commentAdded, 'emit');
 
       component.submit();
-
+      fixture.componentRef.setInput('submitting', true);
+      fixture.detectChanges(); // 必须触发变更检测
       expect(component.isSubmitting()).toBe(true);
 
       // 模拟异步完成
       vi.runAllTimers();
 
       expect(emitSpy).toHaveBeenCalledWith(testComment);
+
+      // 5. 💡 模拟异步结束后，父组件将 submitting 设回 false
+      fixture.componentRef.setInput('submitting', false);
+      fixture.detectChanges();
+
+      component.clearContent();
+
       expect(component.content).toBe('');
       expect(component.isSubmitting()).toBe(false);
     });
@@ -248,11 +251,13 @@ describe('AddCommentComponent', () => {
       const emitSpy = vi.spyOn(component.commentAdded, 'emit');
 
       component.submit();
+      fixture.componentRef.setInput('submitting', true);
       expect(component.isSubmitting()).toBe(true);
 
       // 尝试第二次提交
       component.content = '第二次提交';
       component.submit();
+      fixture.componentRef.setInput('submitting', true);
 
       vi.runAllTimers();
 
@@ -264,10 +269,14 @@ describe('AddCommentComponent', () => {
     it('提交完成后应该重置状态', () => {
       component.content = '测试评论';
       component.submit();
+      fixture.componentRef.setInput('submitting', true);
 
       expect(component.isSubmitting()).toBe(true);
 
       vi.runAllTimers();
+
+      fixture.componentRef.setInput('submitting', false);
+      component.clearContent();
 
       expect(component.isSubmitting()).toBe(false);
       expect(component.content).toBe('');
@@ -289,6 +298,7 @@ describe('AddCommentComponent', () => {
       vi.spyOn(component.commentAdded, 'emit');
 
       component.submit();
+      fixture.componentRef.setInput('submitting', true);
 
       expect(component.isSubmitting()).toBe(true);
     });

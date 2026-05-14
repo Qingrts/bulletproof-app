@@ -95,6 +95,7 @@ import { FormsModule } from '@angular/forms';
 export class AddCommentComponent {
   readonly commentAdded = output<string>();
   readonly submitting = input(false); // 由父组件控制
+  readonly postId = input('');
 
   content = '';
   isSubmitting = computed(() => this.submitting());

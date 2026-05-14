@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, computed, input } from '@angular/core';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'success';
 export type ButtonSize = 'small' | 'medium' | 'large';
@@ -11,14 +11,14 @@ export type ButtonSize = 'small' | 'medium' | 'large';
       [type]="type"
       [disabled]="disabled || loading"
       [attr.aria-disabled]="disabled || loading"
-      [class]="getButtonClasses()"
+      [class]="buttonClasses()"
       (click)="buttonClick.emit($event); clicked.emit()"
     >
-      @if (loading) {
+      @if (loading()) {
         <span class="loading-spinner"></span>
       }
       <span class="btn-content">
-        {{ label }}
+        {{ label() }}
         <ng-content></ng-content>
       </span>
     </button>
@@ -116,18 +116,19 @@ export type ButtonSize = 'small' | 'medium' | 'large';
   ],
 })
 export class ButtonComponent {
-  @Input() variant: ButtonVariant = 'primary';
-  @Input() size: ButtonSize = 'medium';
   @Input() type: 'button' | 'submit' | 'reset' = 'button';
-  @Input() disabled = false;
-  @Input() loading = false;
-  @Input() label = '';
+
+  variant = input<ButtonVariant>('primary');
+  size = input<ButtonSize>('medium');
+  disabled = input<boolean>(false);
+  loading = input<boolean>(false);
+  label = input<string>('');
 
   @Output() buttonClick = new EventEmitter<Event>();
   @Output() clicked = new EventEmitter<void>();
 
-  getButtonClasses(): string {
-    const classes = ['btn', `btn-${this.variant}`, `btn-${this.size}`];
-    return classes.join(' ');
-  }
+  // 使用 computed 代替函数
+  buttonClasses = computed(() => {
+    return `btn btn-${this.variant()} btn-${this.size()}`;
+  });
 }

@@ -15,6 +15,7 @@ import { API_CONFIG } from './core/services/api/api-config.interface';
 
 import { routes } from './app.routes';
 import { LocalStorageService } from './core/storage/implementations/local-storage.service';
+import { IndexedDBStorageService } from './core/storage/implementations/indexeddb-storage.service';
 import { StorageService } from './core/storage/storage.service';
 import { zh_CN, provideNzI18n } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
@@ -31,7 +32,7 @@ export const appConfig: ApplicationConfig = {
     // 注入全局 API 配置
     {
       provide: API_CONFIG,
-      useValue: { baseUrl: 'http://localhost:3000/v1', timeout: 10000 },
+      useValue: { baseUrl: '', timeout: 10000 },
     },
     // 注册 HttpClient 和 函数式拦截器 (注意顺序：从外到内执行)
     provideHttpClient(
@@ -57,7 +58,8 @@ export const appConfig: ApplicationConfig = {
         Error：最底层，处理最终结果。
       */
     ),
-    { provide: StorageService, useClass: LocalStorageService },
+    // { provide: StorageService, useClass: LocalStorageService },
+    { provide: StorageService, useClass: IndexedDBStorageService },
     { provide: NotificationAdapter, useClass: NzNotificationAdapter },
     provideNzI18n(zh_CN),
   ],

@@ -31,29 +31,30 @@ describe('ButtonComponent', () => {
     expect(buttonElement.classes['btn-primary']).toBe(true);
   });
 
-  it('should apply correct variant class', () => {
-    component.variant = 'danger';
+  it('should apply correct variant class', async () => {
+    fixture.componentRef.setInput('variant', 'danger');
+    await fixture.whenStable(); 
     fixture.detectChanges();
     const buttonElement = fixture.debugElement.query(By.css('button'));
     expect(buttonElement.classes['btn-danger']).toBe(true);
   });
 
   it('should apply correct size class', () => {
-    component.size = 'large';
+    fixture.componentRef.setInput('size', 'large');
     fixture.detectChanges();
     const buttonElement = fixture.debugElement.query(By.css('button'));
     expect(buttonElement.classes['btn-large']).toBe(true);
   });
 
   it('should be disabled when disabled input is true', () => {
-    component.disabled = true;
+    fixture.componentRef.setInput('disabled', true);
     fixture.detectChanges();
     const buttonElement = fixture.debugElement.query(By.css('button'));
     expect(buttonElement.nativeElement.disabled).toBe(true);
   });
 
   it('should show loading spinner when loading is true', () => {
-    component.loading = true;
+    fixture.componentRef.setInput('loading', true);
     fixture.detectChanges();
     const spinner = fixture.debugElement.query(By.css('.loading-spinner'));
     expect(spinner).toBeTruthy();
@@ -61,7 +62,7 @@ describe('ButtonComponent', () => {
 
   it('should emit onClick event when clicked', () => {
     const clickSpy = vi.fn();
-    component.onClick.subscribe(clickSpy);
+    component.buttonClick.subscribe(clickSpy);
 
     const buttonElement = fixture.debugElement.query(By.css('button'));
     buttonElement.triggerEventHandler('click', new Event('click'));
@@ -74,13 +75,13 @@ describe('ButtonComponent', () => {
     component.clicked.subscribe(clickedSpy);
 
     const buttonElement = fixture.debugElement.query(By.css('button'));
-    buttonElement.nativeElement.click();
+    buttonElement.triggerEventHandler('click', null);
 
     expect(clickedSpy).toHaveBeenCalled();
   });
 
   it('should not emit events when disabled', () => {
-    component.disabled = true;
+    fixture.componentRef.setInput('disabled', true);
     const clickedSpy = vi.fn();
     component.clicked.subscribe(clickedSpy);
 
@@ -92,7 +93,7 @@ describe('ButtonComponent', () => {
   });
 
   it('should not emit events when loading', () => {
-    component.loading = true;
+    fixture.componentRef.setInput('loading', true);
     const clickedSpy = vi.fn();
     component.clicked.subscribe(clickedSpy);
 
@@ -103,9 +104,9 @@ describe('ButtonComponent', () => {
     expect(clickedSpy).not.toHaveBeenCalled();
   });
 
-  it('should display content inside button', () => {
+  it('should display label inside button', () => {
     const testContent = 'Click Me';
-    component.content = testContent;
+    fixture.componentRef.setInput('label', testContent);
     fixture.detectChanges();
 
     const buttonElement = fixture.debugElement.query(By.css('button'));

@@ -12,22 +12,25 @@ export class LocalStorageService extends StorageService {
    * @param value 数据
    * @param ttlMillis 可选过期时间（毫秒），例如 3600000 为 1 小时
    */
-  setItem<T>(key: string, value: T, ttlMillis: number | null = null): void {
+  async set<T>(key: string, value: T, ttlMillis: number | null = null): Promise<void> {
     const expiry = ttlMillis ? Date.now() + ttlMillis : null;
     const item: StorageItem<T> = { value, expiry };
     
     try {
       localStorage.setItem(this.prefix + key, JSON.stringify(item));
+      return Promise.resolve();
     } catch (e) {
       console.error('LocalStorage setItem error:', e);
       // 如果空间满了，可以根据需要执行清除策略
+      return Promise.resolve();
     }
+    
   }
 
   /**
    * 读取数据
    */
-  getItem<T>(key: string): T | null {
+  async get<T>(key: string): Promise<T | null> {
     const raw = localStorage.getItem(this.prefix + key);
     if (!raw) return null;
 
@@ -36,7 +39,7 @@ export class LocalStorageService extends StorageService {
 
       // 检查是否过期
       if (item.expiry && Date.now() > item.expiry) {
-        this.removeItem(key);
+        this.delete(key);
         return null;
       }
 
@@ -46,16 +49,18 @@ export class LocalStorageService extends StorageService {
     }
   }
 
-  removeItem(key: string): void {
+  async delete(key: string): Promise<void> {
     localStorage.removeItem(this.prefix + key);
+    return Promise.resolve();
   }
 
   /**
    * 清除所有本应用的数据，但不触碰其他应用的数据
    */
-  clear(): void {
+  async clear(): Promise<void> {
     Object.keys(localStorage)
       .filter(k => k.startsWith(this.prefix))
       .forEach(k => localStorage.removeItem(k));
+    return Promise.resolve();
   }
 }

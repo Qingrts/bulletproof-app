@@ -8,11 +8,12 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [CommonModule, NzTableModule, NzButtonModule, AppInputComponent], // 使用我们的包装组件
-  providers: [UserFacade], // 组件级 Provider，随组件销毁而销毁
+  imports: [CommonModule, NzTableModule, NzButtonModule, AppInputComponent],
+  providers: [UserFacade],
   template: `
     <div class="page-header">
       <app-input placeholder="搜索用户..." (ngModelChange)="onSearch($event)"></app-input>
+      {{ facade.isLoading() }}
       <button nz-button nzType="primary" (click)="facade.reload()" [disabled]="facade.isLoading()">
         刷新数据
       </button>

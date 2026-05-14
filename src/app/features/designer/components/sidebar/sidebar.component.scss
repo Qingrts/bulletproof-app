@@ -1,0 +1,55 @@
+.sidebar-container {
+  display: flex;
+  height: 100%;
+  background: #1a1c1e; // 深色背景
+  color: #fff;
+
+  .category-rail {
+    width: 60px;
+    border-right: 1px solid #333;
+    .cat-item {
+      padding: 15px 0;
+      text-align: center;
+      cursor: pointer;
+      opacity: 0.6;
+      &.active {
+        opacity: 1;
+        color: #00e5ff;
+        background: rgba(0, 229, 255, 0.1);
+      }
+    }
+  }
+
+  .asset-panel {
+    flex: 1;
+    padding: 16px;
+    background: #232629;
+
+    .asset-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); // 两列布局
+      gap: 12px;
+      margin-top: 16px;
+
+      .asset-card {
+        background: #2e3136;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        cursor: grab;
+        &:hover {
+          border-color: #00e5ff;
+        }
+        .thumb {
+          height: 80px;
+          overflow: hidden;
+          img { width: 100%; object-fit: cover; }
+        }
+        .footer {
+          padding: 4px;
+          font-size: 12px;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
