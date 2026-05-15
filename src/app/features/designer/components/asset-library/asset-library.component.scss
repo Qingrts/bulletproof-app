@@ -1,0 +1,97 @@
+.triple-column-library {
+  display: flex;
+  height: 100%;
+  background: #1e1e1e;
+  border-right: 1px solid #333;
+  color: #ccc;
+
+  .column {
+    height: 100%;
+    overflow-y: auto;
+    border-right: 1px solid #2d2d2d;
+    
+    .col-header {
+      padding: 12px;
+      font-size: 11px;
+      color: #666;
+      font-weight: bold;
+      border-bottom: 1px solid #2d2d2d;
+    }
+  }
+
+  // 第一栏：窄条，放图标
+  .first-col {
+    width: 60px;
+    background: #252526;
+    
+    .nav-item {
+      padding: 15px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      font-size: 11px;
+      gap: 5px;
+
+      &.active {
+        color: #00e5ff;
+        background: #1e1e1e;
+      }
+      &:hover:not(.active) { background: #2d2d2d; }
+      .icon { font-size: 18px; }
+    }
+  }
+
+  // 第二栏：中等宽度，放分组名
+  .second-col {
+    width: 100px;
+    
+    .group-item {
+      padding: 10px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      &.active { background: #094771; color: #fff; }
+      &:hover:not(.active) { background: #2d2d2d; }
+      .count { font-size: 10px; color: #666; }
+    }
+  }
+
+  // 第三栏：较宽，放组件卡片
+  .third-col {
+    flex: 1;
+    min-width: 160px;
+    background: #181818;
+
+    .asset-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+      gap: 10px;
+      padding: 12px;
+
+      .asset-card {
+        background: #252526;
+        padding: 8px;
+        border-radius: 4px;
+        cursor: grab;
+        text-align: center;
+        &:hover { border: 1px solid #00e5ff; }
+
+        .preview-box { height: 50px; background: #333; margin-bottom: 5px; }
+        .name { font-size: 10px; white-space: nowrap; overflow: hidden; }
+      }
+    }
+    
+    .empty-tip {
+      display: flex;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+      color: #555;
+      font-size: 12px;
+    }
+  }
+}

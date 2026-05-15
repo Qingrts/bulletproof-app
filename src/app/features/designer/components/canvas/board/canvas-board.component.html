@@ -1,0 +1,46 @@
+<!-- 变换层：缩放核心 -->
+<div #canvasBoard class="canvas-board" cdkDropList [style.width.px]="state.canvasConfig().width" [style.height.px]="state.canvasConfig().height"
+  [style.transform]="'scale(' + state.scale() + ')'"
+  (dragover)="onDragOver($event)"
+  (drop)="onDrop($event)"
+  >
+
+  <!-- 背景网格 -->
+  <div class="grid-background"></div>
+ 
+  <!-- 组件渲染循环 -->
+  @for (widget of state.elements(); track widget.id) {
+  <div class="widget-wrapper" [class.active]="state.selectedId() === widget.id" [style.left.px]="widget.x"
+    [style.top.px]="widget.y" [style.width.px]="widget.width" [style.height.px]="widget.height" [style.z-index]="widget.zIndex"
+    (mousedown)="state.selectedId.set(widget.id)" cdkDrag [cdkDragData]="widget.id"
+    [cdkDragFreeDragPosition]="{ x: widget.x * state.scale(), y: widget.y * state.scale() }"
+    (cdkDragStarted)="onWidgetDragStart(widget.id)" (cdkDragMoved)="onWidgetDragging($event)"
+    (cdkDragEnded)="onWidgetDragEnd($event, widget)"
+    [style.filter]="widget.props.filterOn ? 
+        'hue-rotate(' + widget.props.hue + 'deg) ' + 
+        'saturate(' + widget.props.saturation + '%)' +
+        'contrast(' + widget.props.contrast + '%) ' +
+        'brightness(' + widget.props.brightness + '%) ' : 'none'"
+    >
+
+    <!-- 动态渲染业务组件 -->
+    <ng-container
+      *ngComponentOutlet="getWidgetComponent(widget.type); inputs: { options: widget.config }"></ng-container>
+
+    <!-- 只有选中时显示的缩放手柄 -->
+    @if (state.selectedId() === widget.id) {
+    <app-resize-handlers [widget]="widget"></app-resize-handlers>
+    }
+    @if (state.selectedId() === widget.id) {
+      <div class="resize-handle n" (mousedown)="startResize($event, widget, 'n')"></div>
+      <div class="resize-handle s" (mousedown)="startResize($event, widget, 's')"></div>
+      <div class="resize-handle w" (mousedown)="startResize($event, widget, 'w')"></div>
+      <div class="resize-handle e" (mousedown)="startResize($event, widget, 'e')"></div>
+      <div class="resize-handle nw" (mousedown)="startResize($event, widget, 'nw')"></div>
+      <div class="resize-handle ne" (mousedown)="startResize($event, widget, 'ne')"></div>
+      <div class="resize-handle sw" (mousedown)="startResize($event, widget, 'sw')"></div>
+      <div class="resize-handle se" (mousedown)="startResize($event, widget, 'se')"></div>
+    }
+  </div>
+  }
+</div>

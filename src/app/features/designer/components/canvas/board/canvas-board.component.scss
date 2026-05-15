@@ -1,0 +1,79 @@
+.canvas-board {
+  position: relative;
+  transform-origin: 0 0; // 改为左上角缩放，滚动条计算最准确
+  background-color: #000;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  transition: transform 0.1s ease-out;
+
+  // 这个留白能确保画布缩小到 10% 时，用户依然能轻松看到画布边缘并进行操作
+  margin: 150px;
+  // 因为画布内部的间距通常是由里面的组件坐标（x, y）决定的
+  padding: 0;
+
+  // background-color: #ffffff; // 模拟纸张或大屏背景
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); // 给画布一个阴影，增加层次感
+
+  .grid-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    // 绘制网格线
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px; // 网格大小
+  }
+}
+
+.widget-wrapper {
+  position: absolute;
+  cursor: move;
+  outline: 1px solid transparent;
+  &.active {
+    // outline: 1px solid #00e5ff; // 选中时的青色边框
+    // background: rgba(0, 229, 255, 0.05);
+  }
+}
+
+.element-item {
+  position: absolute; // 绝对定位
+  background: rgba(0, 229, 255, 0.2);
+  border: 1px solid #00e5ff;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  pointer-events: all;
+  cursor: move;
+}
+.element-wrapper {
+  &.selected {
+    outline: 1.5px solid #00e5ff;
+    z-index: 100;
+  }
+}
+
+.resize-handle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  // border: 1px solid #00e5ff;
+  border-radius: 50%;
+  z-index: 101;
+  overflow: hidden;
+
+  // 定位逻辑
+  &.n  { top: -4px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+  &.s  { bottom: -4px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+  &.w  { left: -4px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
+  &.e  { right: -4px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
+  &.nw { top: -4px; left: -4px; cursor: nwse-resize; }
+  &.se { bottom: -4px; right: -4px; cursor: nwse-resize; }
+  &.ne { top: -4px; right: -4px; cursor: nesw-resize; }
+  &.sw { bottom: -4px; left: -4px; cursor: nesw-resize; }
+}

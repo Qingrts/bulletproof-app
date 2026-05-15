@@ -1,96 +1,15 @@
 <div class="settings-panel">
   <!-- 顶部分类 Tab -->
   <div class="settings-tabs">
-    <div class="tab-item active"><i class="icon-customize"></i>定制</div>
-    <div class="tab-item"><i class="icon-animation"></i>动画</div>
-    <div class="tab-item"><i class="icon-data"></i>数据</div>
-    <div class="tab-item"><i class="icon-event"></i>事件</div>
+    <div class="tab-item" [class.active]="active() === 'customize'" (click)="changeActive('customize')"><i class="icon-customize"></i>定制</div>
+    <div class="tab-item" [class.active]="active() === 'animation'" (click)="changeActive('animation')"><i class="icon-animation"></i>动画</div>
+    <div class="tab-item" [class.active]="active() === 'data'" (click)="changeActive('data')"><i class="icon-data"></i>数据</div>
+    <div class="tab-item" [class.active]="active() === 'event'" (click)="changeActive('event')"><i class="icon-event"></i>事件</div>
   </div>
 
   <div class="settings-scroll-content">
-    @if (activeWidget(); as widget) {
-      <!-- 头部：显示当前组件名称 -->
-      <div class="widget-header">
-        <span class="widget-type-tag">{{ widget.type.toUpperCase() }}</span>
-        <span class="widget-id">ID: {{ widget.id.substring(0, 8) }}</span>
-      </div>
-
-      <!-- 动态分组渲染 -->
-      @for (group of getGroups(widget.type); track group.name) {
-        <details class="property-group" open>
-          <summary class="group-title">
-            {{ group.name }}
-            <i class="chevron-icon"></i>
-          </summary>
-
-          <div class="group-content">
-            @for (field of group.fields; track field) {
-              <div class="field-row">
-                <label class="field-label">{{ fieldLabels[field] || field }}</label>
-                
-                <div class="field-control">
-                  @switch (getFieldType(field)) {
-                    <!-- 颜色选择器类型 -->
-                    @case ('color') {
-                      <div class="color-picker-group">
-                        <input type="color" 
-                               [value]="getProperty(widget, field)" 
-                               (input)="onPropertyChange(widget, field, $event)">
-                        <input type="text" 
-                               class="hex-input"
-                               [value]="getProperty(widget, field)" 
-                               (change)="onPropertyChange(widget, field, $event)">
-                      </div>
-                    }
-
-                    <!-- 数字类型 (x, y, w, h 等) -->
-                    @case ('number') {
-                      <div class="number-input-wrapper">
-                        <input type="number" 
-                               [value]="getProperty(widget, field)"
-                               (input)="onPropertyChange(widget, field, $event)">
-                        <div class="unit-tag">px</div>
-                      </div>
-                    }
-
-                    <!-- 下拉选择类型 -->
-                    @case ('select') {
-                      <select [value]="getProperty(widget, field)"
-                              (change)="onPropertyChange(widget, field, $event)">
-                        <!-- 这里可以根据 field 动态绑定 options -->
-                        <option value="dark">幻影黑</option>
-                        <option value="light">简约白</option>
-                        <option value="blue">极客蓝</option>
-                      </select>
-                    }
-
-                    <!-- 默认文本类型 -->
-                    @default {
-                      <input type="text" 
-                             [value]="getProperty(widget, field)"
-                             (input)="onPropertyChange(widget, field, $event)"
-                             placeholder="请输入内容...">
-                    }
-                  }
-                </div>
-              </div>
-            }
-          </div>
-        </details>
-      }
-
-      <!-- 底部快捷操作 -->
-      <div class="settings-actions">
-        <button class="btn-delete" (click)="state.deleteWidget(widget.id)">删除组件</button>
-        <button class="btn-copy" (click)="state.copyWidget(widget.id)">复制组件</button>
-      </div>
-
-    } @else {
-      <!-- 未选中状态 -->
-      <div class="empty-state">
-        <div class="empty-icon">📭</div>
-        <p>在画布上选中组件以编辑属性</p>
-      </div>
+    @if (active() === 'customize') {
+      <app-customize-panel></app-customize-panel>
     }
   </div>
 </div>

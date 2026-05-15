@@ -6,22 +6,20 @@ import { DesignerStateService } from '../../services/editor-state.service';
 import { ResizeHandlerComponent } from "../resize-handlers/resize-handlers.component";
 import { WIDGET_REGISTRY } from '../../configs/widget-registry';
 import { RulerComponent } from "./ruler/ruler.component";
+import { CanvasBoardComponent } from "./board/canvas-board.component";
+import { GuideLayerComponent } from './guide-layer/guide-layer.component';
 
 @Component({
   selector: 'app-designer-canvas',
   standalone: true,
-  imports: [CommonModule, CdkDropList, ResizeHandlerComponent, DragDropModule, RulerComponent],
+  imports: [CommonModule, DragDropModule, RulerComponent, CanvasBoardComponent, GuideLayerComponent],
   templateUrl: './canvas.component.html',
   styleUrl: './canvas.component.scss'
 })
 export class CanvasComponent {
   state = inject(DesignerStateService);
 
-  // 画布默认尺寸
-  readonly CANVAS_WIDTH = 1920;
-  readonly CANVAS_HEIGHT = 1080;
 
-  @ViewChild('canvasBoard') canvasBoard!: ElementRef;
   viewport: any;
 
   // 监听 Ctrl + 滚轮实现缩放
@@ -49,46 +47,6 @@ export class CanvasComponent {
     }
   }
 
-  getWidgetComponent(type: string) {
-    const component = WIDGET_REGISTRY[type];
-    if (!component) {
-      console.warn(`未找到类型为 ${type} 的组件映射`);
-    }
-    return component;
-  }
-
-  onDrop(event: CdkDragDrop<any>) {
-    // 1. 获取画布相对于视口的缩放比例
-    const scale = this.state.scale();
-
-    // 2. 获取画布板 (Board) 的位置信息
-    // 如果你的 dragData 包含的是模板数据
-    const template = event.item.data;
-
-    // 3. 计算坐标
-    // event.dropPoint 是鼠标在屏幕上的绝对坐标
-    // 我们需要减去画布容器的左上角偏移，并除以缩放比例
-    const rect = this.canvasBoard.nativeElement.getBoundingClientRect();
-
-    const x = Math.round((event.dropPoint.x - rect.left) / scale);
-    const y = Math.round((event.dropPoint.y - rect.top) / scale);
-
-    // 4. 生成新组件并推送到全局状态
-    this.state.widgets.update(widgets => [
-      ...widgets,
-      {
-        id: crypto.randomUUID(), // 生成唯一ID
-        type: template.type,
-        name: template.name,
-        x: x,
-        y: y,
-        w: template.defaultWidth || 400,
-        h: template.defaultHeight || 300,
-        zIndex: widgets.length + 1,
-        config: { ...template.defaultConfig }
-      }
-    ]);
-  }
 
   onScaleChange(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -98,31 +56,7 @@ export class CanvasComponent {
     this.state.scale.set(newScale);
   }
 
-  onWidgetDragStart(id: string) {
-    this.state.selectedId.set(id);
-  }
-
-  onWidgetDragging(event: any) {
-    // 可以在这里实时更新参考线（辅助对齐）
-  }
-
-  onWidgetDragEnd(event: any, widget: any) {
-    const scale = this.state.scale();
-
-    // cdkDrag 提供的 distance 是基于屏幕像素的偏移量
-    // 我们需要除以当前的 scale 才能换算成画布的逻辑坐标
-    const deltaX = event.distance.x / scale;
-    const deltaY = event.distance.y / scale;
-
-    // 更新状态
-    this.state.updateWidget(widget.id, {
-      x: Math.round(widget.x + deltaX),
-      y: Math.round(widget.y + deltaY)
-    });
-
-    // 重置 CDK 内部的位移记录，防止下次拖拽叠加错误
-    event.source.reset();
-  }
+  
 
   /**
    * 标尺同步核心逻辑：

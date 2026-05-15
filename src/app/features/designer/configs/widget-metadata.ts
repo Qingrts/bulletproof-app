@@ -1,5 +1,11 @@
 // core/configs/widget-metadata.ts
 export const WIDGET_METADATA: any = {
+  'bar': {
+    groups: [
+      { name: '基础', fields: ['name', 'x', 'y', 'w', 'h'] },
+      { name: '地图', fields: ['apiKey', 'theme', 'zoom'] }
+    ]
+  },
   'map': {
     groups: [
       { name: '基础', fields: ['name', 'x', 'y', 'w', 'h'] },

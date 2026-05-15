@@ -1,19 +1,25 @@
-import { Component, inject } from "@angular/core";
-import { DesignerStateService, Widget } from "../../services/editor-state.service";
+import { Component, effect, inject, signal, WritableSignal } from "@angular/core";
+import { CanvasElement, DesignerStateService, Widget } from "../../services/editor-state.service";
 import { WIDGET_METADATA } from "../../configs/widget-metadata";
+import { CustomizePanelComponent } from "./customize-panel/customize-panel.component";
 
 @Component({
   standalone: true,
   selector: 'app-designer-settings',
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss',
-  imports: []
+  imports: [CustomizePanelComponent]
 })
 export class SettingsComponent {
   state = inject(DesignerStateService);
 
+  active: WritableSignal<'customize' | 'animation' | 'data' | 'event'> = signal('customize');
+  changeActive(tp: 'customize' | 'animation' | 'data' | 'event') {
+    this.active.set(tp);
+  }
+
   // 使用 computed 直接获取当前激活组件，性能最优
-  activeWidget = this.state.activeWidget;
+  activeWidget = this.state.selectedElement;
 
   // 字段中文名称映射
   fieldLabels: Record<string, string> = {
@@ -60,7 +66,7 @@ export class SettingsComponent {
    * 3. getProperty: 安全地从 Widget 对象中读取属性值
    * 处理嵌套逻辑：基础属性在根部，业务属性在 config 内部
    */
-  getProperty(widget: Widget, field: string): any {
+  getProperty(widget: CanvasElement, field: string): any {
     const rootFields = ['name', 'x', 'y', 'w', 'h'];
     if (rootFields.includes(field)) {
       return (widget as any)[field];
@@ -70,7 +76,7 @@ export class SettingsComponent {
   }
 
   // 之前的 onPropertyChange 补充：确保更新时保持响应性
-  onPropertyChange(widget: Widget, field: string, event: Event) {
+  onPropertyChange(widget: CanvasElement, field: string, event: Event) {
     const input = event.target as HTMLInputElement;
     let val: any = input.value;
 

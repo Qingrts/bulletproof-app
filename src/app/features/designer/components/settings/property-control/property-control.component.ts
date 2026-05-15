@@ -1,0 +1,35 @@
+import { Component, input, output, model } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+export interface ControlConfig {
+  key: string;      // 对应 props 中的字段名
+  label: string;
+  input: 'progress' | 'number' | 'switch' | 'color' | 'select';
+  min?: number;
+  max?: number;
+  unit?: string;
+  options?: { label: string, value: any }[]; // 给 select 用
+}
+
+@Component({
+  selector: 'app-property-control',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './property-control.component.html',
+  styleUrl: './property-control.component.scss'
+})
+export class PropertyControlComponent {
+  // 配置项
+  config = input.required<ControlConfig[]>();
+  
+  // 绑定的数据对象 (CanvasElement.props)
+  values = model.required<any>();
+  
+  // 当数值改变时触发，用于通知 Canvas 重新渲染
+  changed = output<void>();
+
+  onValueChange() {
+    this.changed.emit();
+  }
+}

@@ -1,0 +1,40 @@
+<div class="triple-column-library">
+  
+  <div class="column first-col">
+    @for (cat of categories(); track cat.name; let i = $index) {
+      <div class="nav-item" 
+           [class.active]="selectedCategory() === i"
+           (click)="selectCategory(i)">
+        <!-- <span class="icon">{{ cat.icon }}</span> -->
+        <span class="label">{{ cat.name }}</span>
+      </div>
+    }
+  </div>
+
+  <div class="column second-col">
+    @for (group of categories()[selectedCategory()].groups; track group.name; let i = $index) {
+      <div class="group-item" 
+           [class.active]="selectedGroup() === i"
+           (click)="selectGroup(i)">
+        {{ group.name }}
+        <span class="count">{{ group.items?.length || 0 }}</span>
+      </div>
+    }
+  </div>
+
+  <div class="column third-col">
+    @if (selectedGroup() !== null) {
+      <div class="col-header">组件</div>
+      <div class="asset-grid">
+        @for (item of categories()[selectedCategory()].groups[selectedGroup()!].items; track item.name) {
+          <div class="asset-card" draggable="true" (dragstart)="onDragStart($event, item)">
+            <div class="preview-box"></div>
+            <div class="name">{{ item.name }}</div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="empty-tip">请选择分组</div>
+    }
+  </div>
+</div>

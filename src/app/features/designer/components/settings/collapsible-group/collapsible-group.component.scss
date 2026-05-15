@@ -1,0 +1,49 @@
+.group-container {
+  border-bottom: 1px solid #333;
+
+  .group-header {
+    height: 32px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    cursor: pointer;
+    background: #2d2d2d;
+
+    &:hover {
+      background: #353535;
+    }
+
+    .arrow {
+      margin-left: 1em;
+      font-size: 10px;
+      transition: transform 0.2s;
+      margin-right: 8px;
+      color: #888;
+    }
+
+    .title {
+      font-size: 12px;
+      user-select: none;
+    }
+  }
+  .switch-wrapper {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  &.is-expanded .arrow {
+    transform: rotate(90deg);
+  }
+
+  .group-content {
+    padding: 12px;
+    background: #1e1e1e;
+    display: grid;
+    gap: 8px;
+  }
+}
+
+.mini-switch {
+  /* 你的 Switch 样式 */
+}

@@ -1,0 +1,21 @@
+<div class="group-container" [class.is-expanded]="expanded()">
+  <div class="group-header" (click)="toggle()">
+    <span class="title">
+      {{ title() }}
+    </span>
+    <span class="arrow">
+      <nz-icon nzType="right" nzTheme="outline" />
+    </span>
+    @if (showSwitch()) {
+    <div class="switch-wrapper" (click)="$event.stopPropagation()">
+      <input type="checkbox" [(ngModel)]="enabled" class="mini-switch" />
+    </div>
+    }
+  </div>
+
+  @if (expanded()) {
+  <div class="group-content">
+    <ng-content></ng-content>
+  </div>
+  }
+</div>
