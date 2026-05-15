@@ -52,7 +52,7 @@ export class DesignerStateService {
   );
 
   // 画布缩放比例 (对应图片底部的 50% 缩放)
-  scale = signal(1);
+  scale = signal(0.5);
 
   scrollX = signal(0);
   scrollY = signal(0);
@@ -95,7 +95,8 @@ export class DesignerStateService {
     background: '#0f0f0f',
     backgroundImage: '',
     showGrid: true,
-    gridSize: 20
+    gridSize: 10,
+    gridColor: 'rgba(255, 255, 255, 0.05)' // 网格线条颜色
   });
 
   // 更新画布配置的方法

@@ -1,5 +1,5 @@
 // pages/designer/components/canvas/canvas.component.ts
-import { Component, ElementRef, ViewChild, inject, HostListener } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject, HostListener, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CdkDragDrop, CdkDropList, DragDropModule } from '@angular/cdk/drag-drop';
 import { DesignerStateService } from '../../services/editor-state.service';
@@ -99,4 +99,24 @@ export class CanvasComponent {
       if (vRuler) vRuler.scrollTop = el.scrollTop;
     });
   }
+
+
+  // 计算网格背景样式
+  gridStyle = computed(() => {
+    const config = this.state.canvasConfig();
+    if (!config.showGrid) return { 'background-image': 'none' };
+
+    const size = config.gridSize;
+    const color = config.gridColor;
+    
+    // 使用双重线性渐变绘制十字网格
+    return {
+      'background-image': `
+        linear-gradient(${color} 1px, transparent 1px),
+        linear-gradient(90deg, ${color} 1px, transparent 1px)
+      `,
+      'background-size': `${size}px ${size}px`,
+      'background-color': config.background
+    };
+  });
 }

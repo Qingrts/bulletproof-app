@@ -1,9 +1,19 @@
-import { Component, ElementRef, ViewChild, inject, effect } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject, effect, computed, signal } from '@angular/core';
 import { CanvasElement, DesignerStateService } from '../../../services/editor-state.service';
 import { CdkDragDrop, CdkDropList, DragDropModule } from '@angular/cdk/drag-drop';
 import { ResizeHandlerComponent } from '../../resize-handlers/resize-handlers.component';
 import { WIDGET_REGISTRY } from '../../../configs/widget-registry';
-import { NgComponentOutlet } from '@angular/common';
+import { CommonModule, NgComponentOutlet } from '@angular/common';
+
+// 在创建新元素（如 onDrop）时
+const defaultFilterProps = {
+  hue: 0,
+  saturation: 100,
+  brightness: 100,
+  contrast: 100,
+  opacity: 100,
+  filterOn: false
+};
 
 @Component({
   selector: 'app-canvas-board',
@@ -18,10 +28,11 @@ import { NgComponentOutlet } from '@angular/common';
     canvas { display: block; width: 100%; height: 100%; }
   `],
   styleUrl: './canvas-board.component.scss',
-  imports: [CdkDropList, ResizeHandlerComponent, DragDropModule, NgComponentOutlet]
+  imports: [CdkDropList, ResizeHandlerComponent, DragDropModule, NgComponentOutlet, CommonModule]
 })
 export class CanvasBoardComponent {
   state = inject(DesignerStateService);
+  isDragging = signal(false);
   @ViewChild('canvasBoard') canvasBoard!: ElementRef;
 
 
@@ -37,9 +48,12 @@ export class CanvasBoardComponent {
 
   onWidgetDragStart(id: string) {
     this.state.selectedId.set(id);
+    document.body.style.cursor = 'grabbing';
+    this.isDragging.set(true); // 这是一个全局信号
   }
 
   onWidgetDragging(event: any) {
+    console.log('event', event);
     // 可以在这里实时更新参考线（辅助对齐）
   }
 
@@ -52,13 +66,17 @@ export class CanvasBoardComponent {
     const deltaY = event.distance.y / scale;
 
     // 更新状态
-    this.state.updateWidget(widget.id, {
+    this.state.updateElement(widget.id, {
       x: Math.round(widget.x + deltaX),
       y: Math.round(widget.y + deltaY)
     });
-
+    console.log(`onWidgetDragEnd`, {
+      x: Math.round(widget.x + deltaX),
+      y: Math.round(widget.y + deltaY)
+    })
     // 重置 CDK 内部的位移记录，防止下次拖拽叠加错误
     event.source.reset();
+    this.isDragging.set(false);
   }
 
   onDragOver(event: DragEvent) {
@@ -93,6 +111,7 @@ export class CanvasBoardComponent {
     // 2. 使用从资产库传来的尺寸
     const w = data.defaultWidth;
     const h = data.defaultHeight;
+    
 
     // 3. 创建并添加新元素
     const newElement: CanvasElement = {
@@ -123,12 +142,7 @@ export class CanvasBoardComponent {
         showGrid: false,
         chartTitle: '123131',
         data: [],
-        hue: 0,
-        saturation: 0,
-        contrast: 0,
-        brightness: 0,
-        filterOn: undefined,
-        opacity: 0
+        ...defaultFilterProps,
       }
     };
     this.state.addElement(newElement);
@@ -179,6 +193,7 @@ export class CanvasBoardComponent {
       if (newW < 20) { newW = 20; newX = el.x; }
       if (newH < 20) { newH = 20; newY = el.y; }
 
+      
       this.state.updateElement(el.id, { width: newW, height: newH, x: newX, y: newY });
     };
 
@@ -206,4 +221,5 @@ export class CanvasBoardComponent {
 
     return p.filterOn ? filters : 'none';
   }
+
 }

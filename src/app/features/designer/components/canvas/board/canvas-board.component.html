@@ -21,26 +21,15 @@
         'saturate(' + widget.props.saturation + '%)' +
         'contrast(' + widget.props.contrast + '%) ' +
         'brightness(' + widget.props.brightness + '%) ' : 'none'"
+      [style.pointer-events]="isDragging() ? 'none' : 'auto'"
+      [style.z-index]="state.selectedId() === widget.id ? 999 : 1"
     >
 
+    {{ widget.id }}
     <!-- 动态渲染业务组件 -->
     <ng-container
       *ngComponentOutlet="getWidgetComponent(widget.type); inputs: { options: widget.config }"></ng-container>
 
-    <!-- 只有选中时显示的缩放手柄 -->
-    @if (state.selectedId() === widget.id) {
-    <app-resize-handlers [widget]="widget"></app-resize-handlers>
-    }
-    @if (state.selectedId() === widget.id) {
-      <div class="resize-handle n" (mousedown)="startResize($event, widget, 'n')"></div>
-      <div class="resize-handle s" (mousedown)="startResize($event, widget, 's')"></div>
-      <div class="resize-handle w" (mousedown)="startResize($event, widget, 'w')"></div>
-      <div class="resize-handle e" (mousedown)="startResize($event, widget, 'e')"></div>
-      <div class="resize-handle nw" (mousedown)="startResize($event, widget, 'nw')"></div>
-      <div class="resize-handle ne" (mousedown)="startResize($event, widget, 'ne')"></div>
-      <div class="resize-handle sw" (mousedown)="startResize($event, widget, 'sw')"></div>
-      <div class="resize-handle se" (mousedown)="startResize($event, widget, 'se')"></div>
-    }
   </div>
   }
 </div>

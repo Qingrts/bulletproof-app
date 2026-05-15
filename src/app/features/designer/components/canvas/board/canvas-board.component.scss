@@ -29,9 +29,16 @@
 }
 
 .widget-wrapper {
+  user-select: none;
+  will-change: transform, left, top;
+  contain: layout size;
+  -webkit-user-drag: none; /* 禁用系统默认拖拽 */
   position: absolute;
   cursor: move;
   outline: 1px solid transparent;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
   &.active {
     // outline: 1px solid #00e5ff; // 选中时的青色边框
     // background: rgba(0, 229, 255, 0.05);
@@ -51,6 +58,10 @@
   cursor: move;
 }
 .element-wrapper {
+  position: absolute;
+  isolation: isolate; /* 关键：切断渲染关联 */
+  overflow: visible;  /* 确保不被父级裁剪 */
+  transition: outline 0.2s, box-shadow 0.2s;
   &.selected {
     outline: 1.5px solid #00e5ff;
     z-index: 100;

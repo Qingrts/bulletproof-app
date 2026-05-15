@@ -20,9 +20,9 @@ export class CustomizePanelComponent {
 
   filterConfig: any = [
     { key: 'hue', label: '色相', min: 0, max: 360, unit: 'deg', input: 'progress' },
-    { key: 'saturate', label: '饱和度', min: 0, max: 100, unit: '%', input: 'progress' },
-    { key: 'contrast', label: '对比度', min: 0, max: 100, unit: '%', input: 'progress' },
-    { key: 'brightness', label: '亮度', min: 0, max: 100, unit: '%', input: 'progress' },
+    { key: 'saturation', label: '饱和度', min: 0, max: 200, unit: '%', input: 'progress' },
+    { key: 'contrast', label: '对比度', min: 0, max: 200, unit: '%', input: 'progress' },
+    { key: 'brightness', label: '亮度', min: 0, max: 200, unit: '%', input: 'progress' },
     { key: 'opacity', label: '透明度', min: 0, max: 100, unit: '%', input: 'progress' },
   ];
 

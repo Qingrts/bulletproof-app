@@ -12,7 +12,8 @@
   <div class="ruler-v-container" (scroll)="onScrollV($event)">
     <app-ruler type="v"></app-ruler>
   </div>
-  <div class="canvas-viewport" (click)="onCanvasClick($event)" (scroll)="syncRulers($event)">
+  
+  <div class="canvas-viewport" (click)="onCanvasClick($event)" (scroll)="syncRulers($event)" [ngStyle]="gridStyle()">
     <app-guide-layer />
 
     <!-- 变换层：缩放核心 -->

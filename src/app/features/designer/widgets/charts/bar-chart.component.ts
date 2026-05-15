@@ -4,8 +4,8 @@ import * as echarts from 'echarts';
 @Component({
   selector: 'app-echarts-chart',
   standalone: true,
-  template: `<div #chartContainer [style.width]="'100%'" [style.height]="'100%'"></div>`,
-  styles: [`:host { display: block; width: 100%; height: 100%; }`]
+  template: `<div #chartContainer [style.width]="'100%'" [style.height]="'100%'" [style.pointerEvents]="'none'"></div>`,
+  styles: [`:host { display: block; width: 100%; height: 100%;  }`]
 })
 export class BarChartComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('chartContainer', { static: true }) chartContainer!: ElementRef;
