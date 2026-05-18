@@ -7,6 +7,7 @@ import { AppInputNumberComponent } from '@shared/components/input-number/input-n
 export interface ControlConfig {
   key: string;      // 对应 props 中的字段名
   label: string;
+  innerLabel?: string;
   input: 'progress' | 'number' | 'switch' | 'color' | 'select' | 'string';
   min?: number;
   max?: number;

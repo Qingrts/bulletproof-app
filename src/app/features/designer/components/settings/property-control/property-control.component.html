@@ -1,7 +1,9 @@
 <div class="control-grid">
   @for (item of config(); track item.key) {
     <div class="control-row" [style.width]="item.width ? item.width : '100%'">
-      <label class="control-label">{{ item.label }}</label>
+      @if (item.label) {
+        <label class="control-label">{{ item.label }}</label>
+      }
       
       <div class="control-field">
         @switch (item.input) {
@@ -20,6 +22,7 @@
 
           @case ('number') {
             <app-input-number
+              [label]="item.innerLabel"
               [(ngModel)]="values()[item.key]"
               (ngModelChange)="onValueChange()"
             ></app-input-number>

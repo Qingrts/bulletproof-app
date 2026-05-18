@@ -20,8 +20,9 @@ export class CustomizePanelComponent {
 
   baseConfig: any[] = [
     { key: 'name', label: '名称', min: 0, maxLength: 12, unit: 'deg', input: 'string' },
-    { key: 'width', label: '宽度', min: 0, input: 'number', width: '49%', },
-    { key: 'height', label: '高度', min: 0, input: 'number', width: '49%', },
+    { key: 'size', label: '尺寸', min: 0, input: 'number', width: '100%', },
+    { key: 'width', innerLabel: '宽度', min: 0, input: 'number', width: '45%', },
+    { key: 'height', innerLabel: '高度', min: 0, input: 'number', width: '45%', },
   ];
 
   filterConfig: any = [

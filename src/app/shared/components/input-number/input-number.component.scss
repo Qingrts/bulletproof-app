@@ -1,9 +1,23 @@
 :host ::ng-deep {
   .input-number-wrapper {
+    --n-height: 28px;
+    width: 100%;
+    align-items: center;
+    label {
+      // white-space: nowrap;
+      min-width: 40px;
+    }
+    display: flex;
     .ant-input-number {
+      // max-width: 40%;
+      height: var(--n-height);
+      line-height: var(--n-height);
       .ant-input-number-handler-wrap {
         display: none;
       }
+    }
+    .anticon {
+      cursor: pointer;
     }
 
     &:focus-within {
@@ -22,7 +36,7 @@
     color: #efefef;
     /* 亮灰色文字 */
     // padding: 6px 12px;
-    padding: 0 12px;
+    padding: 0 0 0 6px;
     border-radius: 4px;
     font-size: 13px;
     outline: none;
@@ -31,7 +45,7 @@
     background-color: rgba(255, 255, 255, 0.1);
 
     .ant-input-number-input {
-      width: 40px;
+      width: calc(100% - 40px);
       color: rgba(255, 255, 255, 0.82);
       outline: none;
     }
