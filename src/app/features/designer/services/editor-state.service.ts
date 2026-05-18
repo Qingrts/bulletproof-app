@@ -38,6 +38,15 @@ export interface CanvasElement {
 
 @Injectable({ providedIn: 'root' })
 export class DesignerStateService {
+  // 定义拖拽状态信号
+  private _isDragging = signal<boolean>(false);
+
+  // 记录当前是否处于“空格按下”模式
+  isSpacePressed = signal(false);
+  
+  // 暴露为只读，防止组件随意修改，必须通过方法更改
+  readonly isDragging = this._isDragging.asReadonly();
+
   // 核心状态：组件列表
   widgets = signal<Widget[]>([]);
   
@@ -102,5 +111,17 @@ export class DesignerStateService {
   // 更新画布配置的方法
   updateCanvas(patch: Partial<any>) {
     this.canvasConfig.update(prev => ({ ...prev, ...patch }));
+  }
+
+  // 更新状态的方法
+  setDragging(status: boolean) {
+    this._isDragging.set(status);
+    
+    // 性能小技巧：拖拽时禁用 body 的文字选中，防止干扰
+    if (status) {
+      document.body.style.userSelect = 'none';
+    } else {
+      document.body.style.userSelect = 'auto';
+    }
   }
 }

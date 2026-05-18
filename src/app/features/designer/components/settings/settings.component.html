@@ -11,5 +11,10 @@
     @if (active() === 'customize') {
       <app-customize-panel></app-customize-panel>
     }
+    @else if (active() === 'data') {
+      <button nz-button (click)="onSetDataSource()">配置数据源</button>
+    }
+
   </div>
+
 </div>

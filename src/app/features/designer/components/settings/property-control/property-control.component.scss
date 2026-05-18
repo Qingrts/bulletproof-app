@@ -1,16 +1,25 @@
 .control-grid {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  .control-row + .control-row {
+    margin-top: 12px;
+  }
   .control-row {
-    display: grid;
-    grid-template-columns: 80px 1fr; // 固定标签宽度
+    display: flex;
+    // grid-template-columns: 60px 1fr; // 固定标签宽度
     align-items: center;
+    overflow: hidden;
     
     .control-label {
       font-size: 11px;
       color: #999;
+      min-width: 60px;
+    }
+    .control-field {
+      flex: 1;
+      // max-width: 50%;
     }
   }
 

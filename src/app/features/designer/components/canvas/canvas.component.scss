@@ -44,6 +44,38 @@
     overflow: auto;
     position: relative; // 建立局部坐标系
     background-color: #1e1e1e;
+
+    // 当按住空格时，显示“可抓取”的小手
+    &.panning-mode {
+      cursor: grab !important;
+      
+      // 禁用内容选中，防止拖拽时意外选中组件文字
+      user-select: none;
+
+      // 当鼠标按下正在拖拽时，显示“抓紧”的小手
+      &:active {
+        cursor: grabbing !important;
+      }
+
+      // 关键：平移模式下，禁用子元素的鼠标事件，确保拖拽流畅
+      app-canvas-board {
+        pointer-events: none;
+      }
+    }
+    &.panning-mode {
+      cursor: grab !important;
+      
+      // 强制禁止所有子元素的文字选中和鼠标事件
+      user-select: none !important;
+      * {
+        pointer-events: none !important; 
+        user-select: none !important;
+      }
+
+      &:active {
+        cursor: grabbing !important;
+      }
+    }
   }
 
   .canvas-footer {

@@ -1,13 +1,16 @@
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import * as echarts from 'echarts';
+import { DesignerStateService } from '../../services/editor-state.service';
 
 @Component({
   selector: 'app-echarts-chart',
   standalone: true,
-  template: `<div #chartContainer [style.width]="'100%'" [style.height]="'100%'" [style.pointerEvents]="'none'"></div>`,
+  template: `<div #chartContainer [style.width]="'100%'" [style.height]="'100%'" [style.pointer-events]="state.isDragging() ? 'none' : 'auto'"></div>`,
   styles: [`:host { display: block; width: 100%; height: 100%;  }`]
 })
 export class BarChartComponent implements OnInit, OnChanges, OnDestroy {
+  state = inject(DesignerStateService)
+
   @ViewChild('chartContainer', { static: true }) chartContainer!: ElementRef;
   @Input() options: echarts.EChartsOption = {};
   

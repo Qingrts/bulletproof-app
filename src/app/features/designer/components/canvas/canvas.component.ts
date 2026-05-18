@@ -19,9 +19,6 @@ import { GuideLayerComponent } from './guide-layer/guide-layer.component';
 export class CanvasComponent {
   state = inject(DesignerStateService);
 
-
-  viewport: any;
-
   // 监听 Ctrl + 滚轮实现缩放
   @HostListener('wheel', ['$event'])
   onMouseWheel(event: WheelEvent) {
@@ -57,46 +54,32 @@ export class CanvasComponent {
   }
 
   
-
-  /**
-   * 标尺同步核心逻辑：
-   * 我们主要通过 syncRulers 处理从画布到标尺的单向同步。
-   * onScrollH/V 则是为了捕获标尺容器可能发生的意外滚动并强制对齐。
-   */
-
-  onScrollH(event: Event) {
-    const el = event.target as HTMLElement;
-    // 如果用户通过某种方式滚动了水平标尺，同步给画布视口
-    if (this.viewport?.nativeElement) {
-      this.viewport.nativeElement.scrollLeft = el.scrollLeft;
-    }
-  }
-
-  onScrollV(event: Event) {
-    const el = event.target as HTMLElement;
-    // 同步给画布视口
-    if (this.viewport?.nativeElement) {
-      this.viewport.nativeElement.scrollTop = el.scrollTop;
-    }
-  }
-
   /**
    * 修正：同步滚动方法
    * 必须使用 requestAnimationFrame 保证滚动的平滑度，避免标尺抖动
    */
   syncRulers(event: Event) {
     const viewport = event.target as HTMLElement;
-    const el = viewport;
-
-    this.state.scrollX.set(viewport.scrollLeft);
-    this.state.scrollY.set(viewport.scrollTop);
+    
+    // 仅在值真正改变时才同步，减少渲染压力
+    if (Math.abs(this.state.scrollX() - viewport.scrollLeft) > 0.5) {
+        this.state.scrollX.set(viewport.scrollLeft);
+    }
+    if (Math.abs(this.state.scrollY() - viewport.scrollTop) > 0.5) {
+        this.state.scrollY.set(viewport.scrollTop);
+    }
 
     const hRuler = document.querySelector('.ruler-h-container');
     const vRuler = document.querySelector('.ruler-v-container');
 
+    // 使用 requestAnimationFrame 是正确的，但要确保目标存在
     requestAnimationFrame(() => {
-      if (hRuler) hRuler.scrollLeft = el.scrollLeft;
-      if (vRuler) vRuler.scrollTop = el.scrollTop;
+      if (hRuler && hRuler.scrollLeft !== viewport.scrollLeft) {
+        hRuler.scrollLeft = viewport.scrollLeft;
+      }
+      if (vRuler && vRuler.scrollTop !== viewport.scrollTop) {
+        vRuler.scrollTop = viewport.scrollTop;
+      }
     });
   }
 
@@ -119,4 +102,87 @@ export class CanvasComponent {
       'background-color': config.background
     };
   });
+
+  // 获取 HTML 中的 viewport 引用
+  @ViewChild('viewport', { static: true }) viewport!: ElementRef<HTMLElement>;
+
+  private isPanning = false;
+  private startX = 0;
+  private startY = 0;
+  private scrollLeft = 0;
+  private scrollTop = 0;
+
+  // 1. 监听空格按下
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    // 1. 检查是否按下的是空格键
+    if (event.code === 'Space') {
+      const target = event.target as HTMLElement;
+      
+      // 2. 只有当焦点不在输入框、文本域或可编辑元素时，才拦截默认滚动
+      const isInput = target.tagName === 'INPUT' || 
+                      target.tagName === 'TEXTAREA' || 
+                      target.isContentEditable;
+
+      if (!isInput) {
+        // 3. 关键：阻止浏览器默认的空格滚动行为
+        event.preventDefault(); 
+        
+        // 4. 设置状态
+        if (!this.state.isSpacePressed()) {
+          this.state.isSpacePressed.set(true);
+        }
+      }
+    }
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  onKeyUp(event: KeyboardEvent) {
+    if (event.code === 'Space') {
+      this.state.isSpacePressed.set(false);
+      this.stopPanning();
+    }
+  }
+
+  // 3. 鼠标按下开始平移
+  onPointerDown(e: PointerEvent) {
+    if (!this.state.isSpacePressed()) return;
+    
+    this.isPanning = true;
+    const el = this.viewport.nativeElement;
+    
+    // 记录初始位置
+    this.startX = e.pageX - el.offsetLeft;
+    this.startY = e.pageY - el.offsetTop;
+    this.scrollLeft = el.scrollLeft;
+    this.scrollTop = el.scrollTop;
+    
+    // 捕获指针，确保滑出画布也能继续拖拽
+    el.setPointerCapture(e.pointerId);
+  }
+
+  // 4. 鼠标移动执行平移
+  onPointerMove(e: PointerEvent) {
+    if (!this.isPanning) return;
+
+    const el = this.viewport.nativeElement;
+    const x = e.pageX - el.offsetLeft;
+    const y = e.pageY - el.offsetTop;
+    
+    // 计算移动距离
+    const walkX = (x - this.startX);
+    const walkY = (y - this.startY);
+    
+    // 直接更新原生滚动条位置
+    el.scrollLeft = this.scrollLeft - walkX;
+    el.scrollTop = this.scrollTop - walkY;
+  }
+
+  onPointerUp() {
+    this.stopPanning();
+  }
+
+  private stopPanning() {
+    this.isPanning = false;
+  }
 }

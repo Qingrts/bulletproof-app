@@ -28,33 +28,33 @@ export class RulerComponent {
     });
   }
 
-  @HostListener('mousemove', ['$event'])
-  onMouseMove(event: MouseEvent) {
-    const rect = this.canvas.nativeElement.getBoundingClientRect();
-    const scale = this.state.scale();
-    const isH = this.type === 'h';
-    const scrollPos = isH ? this.state.scrollX() : this.state.scrollY();
+  // @HostListener('mousemove', ['$event'])
+  // onMouseMove(event: MouseEvent) {
+  //   const rect = this.canvas.nativeElement.getBoundingClientRect();
+  //   const scale = this.state.scale();
+  //   const isH = this.type === 'h';
+  //   const scrollPos = isH ? this.state.scrollX() : this.state.scrollY();
 
-    // 1. 获取鼠标在 Canvas 上的物理坐标
-    const physPos = isH ? event.clientX - rect.left : event.clientY - rect.top;
+  //   // 1. 获取鼠标在 Canvas 上的物理坐标
+  //   const physPos = isH ? event.clientX - rect.left : event.clientY - rect.top;
 
-    // 2. 【核心修正】反推逻辑坐标
-    // 基于你的公式：physPos = (logicPos * scale) + 150 - scrollPos
-    // 逆推得到：logicPos = (physPos + scrollPos - 150) / scale
-    const logicPos = (physPos + scrollPos - CANVAS_MARGIN) / scale;
+  //   // 2. 【核心修正】反推逻辑坐标
+  //   // 基于你的公式：physPos = (logicPos * scale) + 150 - scrollPos
+  //   // 逆推得到：logicPos = (physPos + scrollPos - 150) / scale
+  //   const logicPos = (physPos + scrollPos - CANVAS_MARGIN) / scale;
 
-    if (isH) {
-      this.state.hoverPosition.update(p => ({ ...p, x: logicPos }));
-    } else {
-      this.state.hoverPosition.update(p => ({ ...p, y: logicPos }));
-    }
-  }
+  //   if (isH) {
+  //     this.state.hoverPosition.update(p => ({ ...p, x: logicPos }));
+  //   } else {
+  //     this.state.hoverPosition.update(p => ({ ...p, y: logicPos }));
+  //   }
+  // }
 
-  // 鼠标移出时隐藏
-  @HostListener('mouseleave')
-  onMouseLeave() {
-    this.state.hoverPosition.set({ x: null, y: null });
-  }
+  // // 鼠标移出时隐藏
+  // @HostListener('mouseleave')
+  // onMouseLeave() {
+  //   this.state.hoverPosition.set({ x: null, y: null });
+  // }
 
   private scheduleDraw() {
     this.drawScheduled = true;

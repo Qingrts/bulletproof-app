@@ -28,11 +28,10 @@ const defaultFilterProps = {
     canvas { display: block; width: 100%; height: 100%; }
   `],
   styleUrl: './canvas-board.component.scss',
-  imports: [CdkDropList, ResizeHandlerComponent, DragDropModule, NgComponentOutlet, CommonModule]
+  imports: [ResizeHandlerComponent, DragDropModule, NgComponentOutlet, CommonModule]
 })
 export class CanvasBoardComponent {
   state = inject(DesignerStateService);
-  isDragging = signal(false);
   @ViewChild('canvasBoard') canvasBoard!: ElementRef;
 
 
@@ -47,9 +46,8 @@ export class CanvasBoardComponent {
 
 
   onWidgetDragStart(id: string) {
+    this.state.setDragging(true);
     this.state.selectedId.set(id);
-    document.body.style.cursor = 'grabbing';
-    this.isDragging.set(true); // 这是一个全局信号
   }
 
   onWidgetDragging(event: any) {
@@ -58,6 +56,7 @@ export class CanvasBoardComponent {
   }
 
   onWidgetDragEnd(event: any, widget: any) {
+    this.state.setDragging(false);
     const scale = this.state.scale();
 
     // cdkDrag 提供的 distance 是基于屏幕像素的偏移量
@@ -76,7 +75,6 @@ export class CanvasBoardComponent {
     })
     // 重置 CDK 内部的位移记录，防止下次拖拽叠加错误
     event.source.reset();
-    this.isDragging.set(false);
   }
 
   onDragOver(event: DragEvent) {
@@ -220,6 +218,50 @@ export class CanvasBoardComponent {
     ].join(' ');
 
     return p.filterOn ? filters : 'none';
+  }
+
+
+  onMouseDown(e: MouseEvent, el: any) {
+    this.state.selectedId.set(el.id)
+    // 1. 阻止冒泡和默认行为（防止触发浏览器的图片拖拽或文字选中）
+    e.preventDefault();
+    e.stopPropagation();
+
+    // 2. 锁定初始状态
+    const startMouseX = e.clientX;
+    const startMouseY = e.clientY;
+    const startElX = el.x;
+    const startElY = el.y;
+    const scale = this.state.scale();
+
+    // 设置全局拖拽状态
+    this.state.setDragging(true);
+    this.state.selectedId.set(el.id);
+
+    // 3. 定义移动处理函数
+    const onMouseMove = (moveEv: MouseEvent) => {
+      // 计算纯粹的逻辑位移（需除以缩放比例）
+      const deltaX = (moveEv.clientX - startMouseX) / scale;
+      const deltaY = (moveEv.clientY - startMouseY) / scale;
+
+      // 计算新坐标并取整（防止次像素抖动）
+      const newX = Math.round(startElX + deltaX);
+      const newY = Math.round(startElY + deltaY);
+
+      // 实时更新状态（如果是性能瓶颈，可以考虑直接操作 DOM style，见下文优化）
+      this.state.updateElement(el.id, { x: newX, y: newY });
+    };
+
+    // 4. 定义结束处理函数
+    const onMouseUp = () => {
+      this.state.setDragging(false);
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    // 5. 挂载到 document 确保鼠标滑出组件也能继续拖拽
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   }
 
 }

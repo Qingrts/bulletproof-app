@@ -1,17 +1,17 @@
 import { Component, Input, forwardRef } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
-import { NzInputModule } from 'ng-zorro-antd/input'; // 👈 只有这里依赖 Zorro
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number'; // 👈 只有这里依赖 Zorro
 import { HlmInputImports } from '@spartan-ng/helm/input/src';
 
 
 @Component({
-  selector: 'app-input',
+  selector: 'app-input-number',
   standalone: true,
-  imports: [NzInputModule, ReactiveFormsModule, FormsModule, HlmInputImports],
+  imports: [NzInputNumberModule, ReactiveFormsModule, FormsModule, HlmInputImports],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => AppInputComponent),
+      useExisting: forwardRef(() => AppInputNumberComponent),
       multi: true
     }
   ],
@@ -21,29 +21,14 @@ import { HlmInputImports } from '@spartan-ng/helm/input/src';
       
       <!-- 💡 这里封装了具体的 UI 实现 -->
       
-      <div class="input-wrapper">
-        <input 
-          nz-input 
-          [placeholder]="placeholder" 
-          [nzSize]="size"
-          [disabled]="disabled"
-          [(ngModel)]="value"
-          [maxLength]="maxLength"
-          (ngModelChange)="onValueChange($event)"
-        />
-        <div class="flex gap-[8px] items-center">
-          <div>{{ value && value.length ? value.length : 0 }}</div>
-          @if (maxLength) {
-            <div> / </div>
-            <div>{{ maxLength }}</div>
-          }
-        </div>
+      <div class="input-number-wrapper">
+        <nz-input-number [nzPlaceHolder]="placeholder"  [(ngModel)]="value" (ngModelChange)="onValueChange($event)" nzMin="1" nzMax="10" />
       </div>
     </div>
   `,
-  styleUrls: ['./input.component.scss']
+  styleUrls: ['./input-number.component.scss']
 })
-export class AppInputComponent implements ControlValueAccessor {
+export class AppInputNumberComponent implements ControlValueAccessor {
   @Input() label = '';
   @Input() placeholder = '';
   @Input() size: 'large' | 'default' | 'small' = 'default';

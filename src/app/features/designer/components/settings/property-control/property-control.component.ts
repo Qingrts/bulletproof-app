@@ -1,21 +1,25 @@
 import { Component, input, output, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AppInputComponent } from "@shared/components";
+import { AppInputNumberComponent } from '@shared/components/input-number/input-number.component';
 
 export interface ControlConfig {
   key: string;      // 对应 props 中的字段名
   label: string;
-  input: 'progress' | 'number' | 'switch' | 'color' | 'select';
+  input: 'progress' | 'number' | 'switch' | 'color' | 'select' | 'string';
   min?: number;
   max?: number;
+  maxLength?: number;
   unit?: string;
   options?: { label: string, value: any }[]; // 给 select 用
+  width?: string;
 }
 
 @Component({
   selector: 'app-property-control',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AppInputComponent, AppInputNumberComponent],
   templateUrl: './property-control.component.html',
   styleUrl: './property-control.component.scss'
 })

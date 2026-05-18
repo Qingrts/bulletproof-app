@@ -1,6 +1,6 @@
 <div class="control-grid">
   @for (item of config(); track item.key) {
-    <div class="control-row">
+    <div class="control-row" [style.width]="item.width ? item.width : '100%'">
       <label class="control-label">{{ item.label }}</label>
       
       <div class="control-field">
@@ -19,16 +19,22 @@
           }
 
           @case ('number') {
-            <input type="number" 
-                   class="number-input"
-                   [(ngModel)]="values()[item.key]"
-                   (ngModelChange)="onValueChange()" />
+            <app-input-number
+              [(ngModel)]="values()[item.key]"
+              (ngModelChange)="onValueChange()"
+            ></app-input-number>
           }
 
           @case ('switch') {
             <input type="checkbox" 
                    [(ngModel)]="values()[item.key]"
                    (ngModelChange)="onValueChange()" />
+          }
+
+          @case ('string') {
+            <app-input
+              [maxLength]="item.maxLength"
+              ></app-input>
           }
         }
       </div>

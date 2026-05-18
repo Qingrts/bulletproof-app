@@ -34,11 +34,15 @@
   contain: layout size;
   -webkit-user-drag: none; /* 禁用系统默认拖拽 */
   position: absolute;
+  left: 0;
+  top: 0;
   cursor: move;
   outline: 1px solid transparent;
   transform: translateZ(0);
   backface-visibility: hidden;
   perspective: 1000px;
+  transform-style: preserve-3d; 
+  /* 强制开启独立合成层 */
   &.active {
     // outline: 1px solid #00e5ff; // 选中时的青色边框
     // background: rgba(0, 229, 255, 0.05);

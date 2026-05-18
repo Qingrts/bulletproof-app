@@ -1,0 +1,45 @@
+:host ::ng-deep {
+  .input-number-wrapper {
+    .ant-input-number {
+      .ant-input-number-handler-wrap {
+        display: none;
+      }
+    }
+
+    &:focus-within {
+      border-color: #4db3a4;
+      box-shadow: 0 0 0 2px rgba(77, 179, 164, 0.1);
+      background: #2a2a2a;
+      /* 聚焦时稍微变亮 */
+      background-color: rgb(81, 214, 169, .1);
+    }
+
+
+    background: #242424;
+    /* 比 section 稍深一点的背景 */
+    border: 1px solid #3d3d3d;
+    /* 深灰色边框 */
+    color: #efefef;
+    /* 亮灰色文字 */
+    // padding: 6px 12px;
+    padding: 0 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    outline: none;
+
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: rgba(255, 255, 255, 0.1);
+
+    .ant-input-number-input {
+      width: 40px;
+      color: rgba(255, 255, 255, 0.82);
+      outline: none;
+    }
+
+    .ant-input-number-input:focus,
+    .ant-input-number-input-focused {
+      box-shadow: none;
+    }
+  }
+
+}

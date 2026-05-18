@@ -1,3 +1,5 @@
+@use "sass:color";
+ 
 // 定义颜色变量
 $panel-bg: #1a1a1a;
 $group-bg: #222222;
@@ -27,7 +29,9 @@ $error-color: #ff4d4f;
   .settings-tabs {
     display: flex;
     border-bottom: 1px solid $border-color;
-    background-color: darken($panel-bg, 2%);
+    // background-color: darken($panel-bg, 2%);
+    background-color: color.adjust($panel-bg, $lightness: -2%);
+    
 
     .tab-item {
       flex: 1;
@@ -110,7 +114,8 @@ $error-color: #ff4d4f;
       }
 
       &:hover {
-        background: lighten($group-bg, 3%); 
+        background: color.adjust($group-bg, $lightness: 3%);
+        // background: lighten($group-bg, 3%); 
       }
 
       .chevron-icon {

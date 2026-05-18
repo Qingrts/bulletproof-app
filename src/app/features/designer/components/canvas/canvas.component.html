@@ -4,16 +4,21 @@
   <div class="ruler-corner"></div>
 
   <!-- 水平标尺 -->
-  <div class="ruler-h-container" (scroll)="onScrollH($event)">
+  <div class="ruler-h-container">
     <app-ruler type="h"></app-ruler>
   </div>
 
   <!-- 垂直标尺 -->
-  <div class="ruler-v-container" (scroll)="onScrollV($event)">
+  <div class="ruler-v-container">
     <app-ruler type="v"></app-ruler>
   </div>
   
-  <div class="canvas-viewport" (click)="onCanvasClick($event)" (scroll)="syncRulers($event)" [ngStyle]="gridStyle()">
+  <div class="canvas-viewport" [class.panning-mode]="state.isSpacePressed()" #viewport 
+    (click)="onCanvasClick($event)" (scroll)="syncRulers($event)" [ngStyle]="gridStyle()"
+    (pointerdown)="onPointerDown($event)"
+    (pointermove)="onPointerMove($event)"
+    (pointerup)="onPointerUp()"
+    >
     <app-guide-layer />
 
     <!-- 变换层：缩放核心 -->

@@ -1,10 +1,8 @@
 @if (state.selectedElement(); as el) {
-  <div class="base-settings">
-    <div class="row">
-      <label>名称</label>
-      <input />
-    </div>
+  <div class="p-2 py-4">
+    <app-property-control [config]="baseConfig" [(values)]="el.props" (changed)="refreshCanvas()" />
   </div>
+
   <app-collapsible-group title="滤镜/变换" [showSwitch]="true" [(enabled)]="el.props.filterOn">
     <app-property-control [config]="filterConfig" [(values)]="el.props" (changed)="refreshCanvas()" />
   </app-collapsible-group>

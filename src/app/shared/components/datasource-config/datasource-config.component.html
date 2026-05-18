@@ -1,0 +1,146 @@
+<div class="ds-dialog-container">
+  <header class="ds-header">
+    <span class="badge">全局公共配置</span>
+    <button class="close-btn" (click)="close()">×</button>
+  </header>
+
+  <div class="ds-content">
+    <section class="section-group">
+      <div>
+      </div>
+      <div class="form-row">
+        <div class="form-item grow">
+          <label>服务</label>
+          <div class="input-group input-group-col">
+            <input type="text" placeholder="例：http://127.0.0.1/" [(ngModel)]="config.baseUrl" />
+            <span class="sub-label">前置 URL</span>
+          </div>
+        </div>
+        <div class="form-item width-200">
+          <div class="input-group input-group-col">
+            <div  class="input-group">
+              <input type="number" [(ngModel)]="config.refreshInterval">
+              <select>
+                <option>秒</option>
+                <option>分</option>
+              </select>
+            </div>
+            <span class="sub-label">更新间隔，为 0 只会初始化</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="kv-table-container">
+        <div class="tabs">
+          <span class="active">Header</span>
+        </div>
+        <table class="kv-table">
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Value</th>
+              <th>操作</th>
+              <th>结果</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of headers(); track $index) {
+            <tr>
+              <td><input placeholder="请输入" [(ngModel)]="item.key"></td>
+              <td><input placeholder="请输入" [(ngModel)]="item.value"></td>
+              <td>
+                <button class="icon-btn add" (click)="addHeader()">+</button>
+                <button class="icon-btn del" (click)="removeHeader($index)">-</button>
+              </td>
+              <td class="status-pass">格式通过</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="divider"><i class="arrow-up"></i></div>
+
+    <section class="section-group">
+      <div class="form-row">
+        <div class="form-item gap-[16px]">
+          <label>地址</label>
+        </div>
+        <div class="form-item grow gap-[16px]">
+          <div class="input-combined flex-1">
+            <select [(ngModel)]="config.method">
+              <option value="get">get</option>
+              <option value="post">post</option>
+            </select>
+            <input type="text" placeholder="请输入地址（去除前置URL）">
+          </div>
+        </div>
+        <div class="form-item gap-[16px]">
+          <div class="form-item width-200">
+          <div class="input-group input-group-col">
+            <div  class="input-group">
+              <input type="number" [(ngModel)]="config.refreshInterval">
+              <select>
+                <option>秒</option>
+                <option>分</option>
+              </select>
+            </div>
+            <span class="sub-label">更新间隔，为 0 只会初始化</span>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-item grow">
+          <label>选择方式</label>
+          <div class="button-group">
+            <button [class.active]="config.type === 'http'">普通请求</button>
+            <button [class.active]="config.type === 'sql'">SQL 请求</button>
+          </div>
+        </div>
+      </div>
+      <div class="kv-table-container pr-[240px]">
+        <div class="tabs">
+          <span class="active">Header</span>
+          <span class="">Params</span>
+          <span class="">Body</span>
+        </div>
+        <table class="kv-table">
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Value</th>
+              <th>操作</th>
+              <th>结果</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of headers(); track $index) {
+            <tr>
+              <td><input placeholder="请输入" [(ngModel)]="item.key"></td>
+              <td><input placeholder="请输入" [(ngModel)]="item.value"></td>
+              <td>
+                <button class="icon-btn add" (click)="addHeader()">+</button>
+                <button class="icon-btn del" (click)="removeHeader($index)">-</button>
+              </td>
+              <td class="status-pass">格式通过</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <footer class="ds-footer">
+    <div class="footer-left">
+      <span class="target-name">「 柱状图 」 —— <span class="method-tag">普通请求</span></span>
+    </div>
+    <div class="footer-right">
+      <button class="btn-cancel" (click)="close()">取消</button>
+      <button class="btn-submit" (click)="save()">保存 & 发送请求</button>
+    </div>
+  </footer>
+</div>

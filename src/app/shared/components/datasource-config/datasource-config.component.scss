@@ -1,0 +1,449 @@
+.ds-dialog-container {
+  display: flex;
+  flex-direction: column;
+  background: #1a1a1a;
+  color: #efefef;
+  width: 900px; // 根据截图比例调整
+  max-height: 90vh;
+  border-radius: 4px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  .ds-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #2d2d2d;
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 24px;
+      cursor: pointer;
+
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
+}
+
+.ds-content {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.divider {
+  position: relative;
+  height: 1px;
+  background: #333;
+  margin: 24px 0;
+  display: flex;
+  justify-content: center;
+
+  .arrow-up {
+    position: absolute;
+    top: -10px;
+    background: #1a1a1a; // 与内容背景一致
+    padding: 0 15px;
+    cursor: pointer;
+    color: #888;
+
+    // 使用纯 CSS 绘制小箭头
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-left: 2px solid #888;
+      border-top: 2px solid #888;
+      transform: rotate(45deg);
+      margin-top: 5px;
+    }
+
+    &:hover {
+      color: #4db3a4;
+
+      &::after {
+        border-color: #4db3a4;
+      }
+    }
+  }
+}
+
+
+.section-group {
+  background: #212121;
+  border: 1px solid #2d2d2d;
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 16px;
+
+  .form-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+
+    .form-item {
+      display: flex;
+      flex-direction: column;
+      label {
+        margin-bottom: 8px;
+        color: #999;
+        font-size: 13px;
+        white-space: nowrap;
+        margin-right: 20px;
+        padding-top: 8px;
+      }
+
+      &.grow {
+        flex: 1;
+        flex-direction: row;
+      }
+    }
+  }
+}
+
+// 组合输入框 (Method + URL)
+.input-combined {
+  display: flex;
+  background: #282828;
+  border: 1px solid #3d3d3d;
+  border-radius: 4px;
+  transition: border 0.2s;
+
+  &:focus-within {
+    border-color: #4db3a4;
+  }
+
+  select {
+    background: #333;
+    color: #ccc;
+    border: none;
+    padding: 8px 12px;
+    border-right: 1px solid #3d3d3d;
+    outline: none;
+  }
+
+  input {
+    background: transparent;
+    border: none;
+    color: #eee;
+    padding: 8px 12px;
+    flex: 1;
+    outline: none;
+
+    &::placeholder {
+      color: #555;
+    }
+  }
+}
+
+.sub-tabs {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #333;
+
+    span {
+      padding-bottom: 8px;
+      color: #777;
+      cursor: pointer;
+      font-size: 14px;
+      position: relative;
+
+      &.active {
+        color: #4db3a4;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -1px;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background: #4db3a4;
+        }
+      }
+    }
+  }
+
+.kv-table-container {
+  margin-top: 10px;
+
+  .tabs,
+  .sub-tabs {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #333;
+
+    span {
+      padding-bottom: 8px;
+      color: #777;
+      cursor: pointer;
+      font-size: 14px;
+      position: relative;
+
+      &.active {
+        color: #4db3a4;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -1px;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background: #4db3a4;
+        }
+      }
+    }
+  }
+
+  .kv-table {
+    width: 100%;
+    border: 1px solid #333;
+    border-collapse: collapse;
+
+    th {
+      background: #2d2d2d;
+      color: #888;
+      font-weight: normal;
+      text-align: left;
+      padding: 10px;
+      border: 1px solid #333;
+    }
+
+    td {
+      padding: 6px 10px;
+      border: 1px solid #333;
+    }
+  }
+  input {
+    width: 100%;
+  }
+}
+
+.ds-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #1a1a1a;
+  border-top: 1px solid #2d2d2d;
+
+  .target-name {
+    color: #aaa;
+
+    .method-tag {
+      background: #2a3f3f;
+      color: #4db3a4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-left: 8px;
+    }
+  }
+
+  .footer-right {
+    display: flex;
+    gap: 12px;
+
+    button {
+      padding: 8px 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn-cancel {
+      background: #333;
+      color: #ccc;
+      border: 1px solid #444;
+
+      &:hover {
+        background: #444;
+      }
+    }
+
+    .btn-submit {
+      background: #4db3a4;
+      color: #1a1a1a;
+      border: none;
+      font-weight: 500;
+
+      &:hover {
+        background: #5bc9b8;
+      }
+    }
+  }
+}
+
+.icon-btn {
+  background: transparent;
+  border: 1px solid #51d6a9;
+  color: #51d6a9;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  margin-right: 5px;
+  border-radius: 4px;
+
+  &.del {
+    color: #f2c97d;
+    border-color: #f2c97d;
+  }
+}
+
+// 按钮组样式 (普通请求 / SQL 请求)
+.button-group {
+  display: flex;
+  background: #2d2d2d;
+  padding: 2px;
+  border-radius: 4px;
+  width: fit-content;
+
+  button {
+    background: transparent;
+    border: none;
+    color: #888;
+    padding: 6px 20px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.2s;
+
+    &.active {
+      background: #444; // 选中态颜色
+      color: #fff;
+    }
+
+    &:hover:not(.active) {
+      color: #ccc;
+    }
+  }
+}
+
+.input-combined,
+.input-group {
+  display: flex;
+  width: 100%;
+
+  &-col {
+    flex-direction: column; // 垂直排列输入区域和下方的 sub-label
+  }
+
+  // 输入框与单位/选择器的水平组合层
+  .input-with-addon {
+    display: flex;
+    align-items: stretch;
+    background: #242424;
+    border: 1px solid #3d3d3d;
+    border-radius: 4px;
+    transition: all 0.2s;
+
+    &:focus-within {
+      border-color: #4db3a4;
+      box-shadow: 0 0 0 1px rgba(77, 179, 164, 0.2);
+    }
+
+    input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #eee;
+      padding: 8px 12px;
+      outline: none;
+      font-size: 13px;
+      min-width: 0; // 防止 flex 容器被撑破
+
+      &::placeholder {
+        color: #555;
+      }
+    }
+
+    // 后置单位或下拉框 (例如: "秒")
+    select,
+    .addon-text {
+      background: #2d2d2d;
+      color: #aaa;
+      border: none;
+      border-left: 1px solid #3d3d3d;
+      padding: 0 10px;
+      font-size: 12px;
+      outline: none;
+      cursor: pointer;
+
+      &:hover {
+        color: #ccc;
+      }
+    }
+  }
+
+  // 输入框下方的提示文字 (例如: "前置 URL")
+  .sub-label {
+    margin-top: 6px;
+    color: #666;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+
+  
+}
+
+.input-combined,
+.input-group,
+.kv-table-container {
+  /* 基础输入控件 */
+  input,
+  select,
+  textarea {
+    background: #242424;
+    /* 比 section 稍深一点的背景 */
+    border: 1px solid #3d3d3d;
+    /* 深灰色边框 */
+    color: #efefef;
+    /* 亮灰色文字 */
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    outline: none;
+    
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.82);
+
+    &::placeholder {
+      color: #555;
+      /* 极低对比度的占位文字 */
+    }
+
+    &:hover {
+      border-color: #4d4d4d;
+    }
+
+    /* 聚焦时的青绿色光晕 */
+    &:focus {
+      border-color: #4db3a4;
+      box-shadow: 0 0 0 2px rgba(77, 179, 164, 0.1);
+      background: #2a2a2a;
+      /* 聚焦时稍微变亮 */
+      background-color: rgb(81, 214, 169, .1);
+    }
+  }
+
+  /* 针对 number 类型去掉原生的微调按钮（保持 UI 纯净） */
+  input[type="number"] {
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+}

@@ -1,17 +1,12 @@
 .group-container {
-  border-bottom: 1px solid #333;
+  border-top: 1px solid #333;
 
   .group-header {
-    height: 32px;
+    height: 42px;
     display: flex;
     align-items: center;
     padding: 0 12px;
     cursor: pointer;
-    background: #2d2d2d;
-
-    &:hover {
-      background: #353535;
-    }
 
     .arrow {
       margin-left: 1em;

@@ -2,13 +2,16 @@ import { Component, effect, inject, signal, WritableSignal } from "@angular/core
 import { CanvasElement, DesignerStateService, Widget } from "../../services/editor-state.service";
 import { WIDGET_METADATA } from "../../configs/widget-metadata";
 import { CustomizePanelComponent } from "./customize-panel/customize-panel.component";
+import { Dialog } from '@angular/cdk/dialog';
+import { DataSourceConfigComponent } from "@shared/components/datasource-config/datasource-config.component";
+import { NzButtonModule } from "ng-zorro-antd/button";
 
 @Component({
   standalone: true,
   selector: 'app-designer-settings',
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss',
-  imports: [CustomizePanelComponent]
+  imports: [CustomizePanelComponent, NzButtonModule]
 })
 export class SettingsComponent {
   state = inject(DesignerStateService);
@@ -93,5 +96,13 @@ export class SettingsComponent {
       const newConfig = { ...widget.config, [field]: val };
       this.state.updateWidget(widget.id, { config: newConfig });
     }
+  }
+
+  dialog = inject(Dialog)
+  onSetDataSource() {
+    this.dialog.open(DataSourceConfigComponent, {
+      minWidth: '850px',
+      data: { /* 传入当前组件的数据配置 */ }
+    })
   }
 }
